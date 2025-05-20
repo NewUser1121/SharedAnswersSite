@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shared Answers - Welcome</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="MainRecourses/MainPage.css">
     <link rel="stylesheet" href="MainRecourses/extraMainPage.css">
 </head>
@@ -13,19 +14,19 @@
         <div class="landing-section">
             <div class="header">
                 <h1 class="site-title">Shared Answers</h1>
-                <p class="site-subtitle">Your Gateway to Academic Freedom and breathablity</p>
+                <p class="site-subtitle">Your Gateway to Academic Excellence</p>
             </div>
             
             <div class="features-grid">
                 <div class="feature-card">
                     <i class="fas fa-graduation-cap"></i>
                     <h3>Multiple Grades</h3>
-                    <p>Access the fully finished assignments ranging from 10th and 11th grade subjects</p>
+                    <p>Access comprehensive resources for 10th and 11th grade subjects</p>
                 </div>
                 <div class="feature-card">
                     <i class="fas fa-book-reader"></i>
-                    <h3>Comprehensive Content</h3>
-                    <p>Find fully finished assignments for all subjects</p>
+                    <h3>Complete Solutions</h3>
+                    <p>Find detailed answers and explanations for all subjects</p>
                 </div>
                 <div class="feature-card">
                     <i class="fas fa-clock"></i>
@@ -35,26 +36,38 @@
             </div>
 
             <div class="cta-buttons">
-                <button id="showLoginBtn" class="primary-btn">Sign In</button>
-                <button id="showRegisterBtn" class="secondary-btn">Create Account</button>
-                <a href="contact.html" class="contact-btn">Contact Us</a>
+                <button id="showLoginBtn" class="primary-btn">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </button>
+                <button id="showRegisterBtn" class="secondary-btn">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
+                <a href="contact.html" class="contact-btn">
+                    <i class="fas fa-envelope"></i> Contact Us
+                </a>
             </div>
         </div>
 
         <!-- Login/Register Modal -->
-        <div id="authModal" class="modal" style="display: none;">
+        <div id="authModal" class="modal">
             <div class="container glass">
                 <div class="login-section">
                     <h2>Sign In</h2>
                     <form id="loginForm">
-                        <input type="text" id="username" placeholder="Username" autocomplete="username">
-                        <input type="password" id="password" placeholder="Password" autocomplete="current-password">
-                        <button type="submit">Login</button>
+                        <div class="input-group">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="username" placeholder="Username" autocomplete="username">
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="password" placeholder="Password" autocomplete="current-password">
+                        </div>
+                        <button type="submit" class="primary-btn">Login</button>
                         <div id="loginMessage"></div>
                     </form>
                 </div>
 
-                <div class="account-section" style="display: none;">
+                <div class="account-section">
                     <h2>Account Configuration</h2>
                     <div class="api-key-form">
                         <input type="text" id="apiKey" placeholder="Enter your API key">
@@ -66,7 +79,7 @@
                     </div>
                 </div>
 
-                <div class="grade-selector-section" style="display: none;">
+                <div class="grade-selector-section">
                     <h2>Select Your Grade</h2>
                     <div class="grade-buttons">
                         <button class="grade-btn" data-grade="10th">10th Grade</button>
@@ -80,32 +93,29 @@
         </div>
 
         <!-- Register Modal -->
-        <div id="registerModal" class="modal" style="display: none;">
+        <div id="registerModal" class="modal">
             <div class="container glass register-container">
                 <div class="register-form-section">
                     <h2>Create Your Account</h2>
                     <p class="register-subtitle">Join our community of learners</p>
                     <form id="registerForm">
                         <div class="input-group">
-                            <i class="fas fa-user input-icon"></i>
+                            <i class="fas fa-user"></i>
                             <input type="text" id="newUsername" placeholder="Choose Username" required>
                         </div>
                         <div class="input-group">
-                            <i class="fas fa-envelope input-icon"></i>
+                            <i class="fas fa-envelope"></i>
                             <input type="email" id="email" placeholder="Email Address" required>
                         </div>
                         <div class="input-group">
-                            <i class="fas fa-lock input-icon"></i>
+                            <i class="fas fa-lock"></i>
                             <input type="password" id="newPassword" placeholder="Choose Password" required>
                         </div>
                         <div class="input-group">
                             <i class="fas fa-check-circle input-icon"></i>
                             <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
                         </div>
-                        <button type="submit">
-                            <span>Create Account</span>
-                            <i class="fas fa-arrow-right"></i>
-                        </button>
+                        <button type="submit" class="primary-btn">Create Account</button>
                         <div id="registerMessage"></div>
                     </form>
                 </div>

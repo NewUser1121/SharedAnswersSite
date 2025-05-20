@@ -4,43 +4,113 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Modal Elements
     const authModal = document.getElementById('authModal');
     const registerModal = document.getElementById('registerModal');
+    const accountSection = document.querySelector('.account-section');
+    const gradeSelectorSection = document.querySelector('.grade-selector-section');
+    const loginSection = document.querySelector('.login-section');
+
+    // Button Elements
     const showLoginBtn = document.getElementById('showLoginBtn');
     const showRegisterBtn = document.getElementById('showRegisterBtn');
     const closeModalBtn = document.getElementById('closeModal');
-    const closeRegisterBtn = document.getElementById('closeRegisterModal');
+    const closeRegisterModalBtn = document.getElementById('closeRegisterModal');
 
     // Form Elements
     const loginForm = document.getElementById('loginForm');
     const registerForm = document.getElementById('registerForm');
     const loginMessage = document.getElementById('loginMessage');
     const registerMessage = document.getElementById('registerMessage');
-    const accountSection = document.querySelector('.account-section');
-    const gradeSelector = document.querySelector('.grade-selector-section');
     const apiKeyInput = document.getElementById('apiKey');
     const saveApiKeyBtn = document.getElementById('saveApiKey');
     const apiStatus = document.getElementById('apiStatus');
     const accessibleGrades = document.getElementById('accessibleGrades');
 
-    // Modal Controls with smooth transitions
-    function showModal(modal) {
-        modal.style.display = 'flex';
-        setTimeout(() => modal.classList.add('active'), 10);
+    // Helper function to lock/unlock body scroll
+    const toggleBodyScroll = (lock) => {
+        if (lock) {
+            const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+            document.body.style.overflow = 'hidden';
+            document.body.style.paddingRight = scrollbarWidth + 'px';
+        } else {
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
+        }
+    };
+
+    // Initialize modals
+    [authModal, registerModal].forEach(modal => {
+        if (modal) modal.classList.remove('active');
+    });
+
+    // Initialize sections
+    [accountSection, gradeSelectorSection].forEach(section => {
+        if (section) section.classList.remove('active');
+    });
+
+    // Show Login Modal
+    if (showLoginBtn) {
+        showLoginBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (authModal) {
+                authModal.classList.add('active');
+                if (loginSection) loginSection.style.display = 'block';
+                if (accountSection) accountSection.classList.remove('active');
+                if (gradeSelectorSection) gradeSelectorSection.classList.remove('active');
+                toggleBodyScroll(true);
+            }
+        });
     }
 
-    function hideModal(modal) {
-        modal.classList.remove('active');
-        setTimeout(() => modal.style.display = 'none', 300);
+    // Show Register Modal
+    if (showRegisterBtn) {
+        showRegisterBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (registerModal) {
+                registerModal.classList.add('active');
+                toggleBodyScroll(true);
+            }
+        });
     }
 
-    showLoginBtn.addEventListener('click', () => showModal(authModal));
-    showRegisterBtn.addEventListener('click', () => showModal(registerModal));
-    closeModalBtn.addEventListener('click', () => hideModal(authModal));
-    closeRegisterBtn.addEventListener('click', () => hideModal(registerModal));
+    // Close Login Modal
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', () => {
+            if (authModal) {
+                authModal.classList.remove('active');
+                toggleBodyScroll(false);
+                setTimeout(() => {
+                    if (loginSection) loginSection.style.display = 'block';
+                    if (accountSection) accountSection.classList.remove('active');
+                    if (gradeSelectorSection) gradeSelectorSection.classList.remove('active');
+                }, 300);
+            }
+        });
+    }
+
+    // Close Register Modal
+    if (closeRegisterModalBtn) {
+        closeRegisterModalBtn.addEventListener('click', () => {
+            if (registerModal) {
+                registerModal.classList.remove('active');
+                toggleBodyScroll(false);
+            }
+        });
+    }
 
     // Close modals when clicking outside
     window.addEventListener('click', (e) => {
-        if (e.target === authModal) hideModal(authModal);
-        if (e.target === registerModal) hideModal(registerModal);
+        if (e.target === authModal) {
+            authModal.classList.remove('active');
+            toggleBodyScroll(false);
+            setTimeout(() => {
+                if (loginSection) loginSection.style.display = 'block';
+                if (accountSection) accountSection.classList.remove('active');
+                if (gradeSelectorSection) gradeSelectorSection.classList.remove('active');
+            }, 300);
+        }
+        if (e.target === registerModal) {
+            registerModal.classList.remove('active');
+            toggleBodyScroll(false);
+        }
     });
 
     // Check for existing API key
@@ -50,99 +120,119 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Login form handler with smooth transitions
-    loginForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const username = document.getElementById('username').value.trim();
-        const password = document.getElementById('password').value.trim();
-        
-        if (username && password) {
-            loginMessage.style.color = '#22c55e';
-            loginMessage.textContent = `Welcome, ${username}!`;
+    if (loginForm) {
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username')?.value.trim();
+            const password = document.getElementById('password')?.value.trim();
             
-            // Smooth transition for sections
-            accountSection.style.display = 'flex';
-            accountSection.style.opacity = '0';
-            setTimeout(() => accountSection.style.opacity = '1', 10);
-            
-            if (window.userAuth.apiKey) {
-                const isValid = await window.userAuth.validateApiKey();
-                if (isValid) {
-                    gradeSelector.style.display = 'flex';
-                    gradeSelector.style.opacity = '0';
-                    setTimeout(() => gradeSelector.style.opacity = '1', 10);
+            if (username && password) {
+                if (loginMessage) {
+                    loginMessage.style.color = '#22c55e';
+                    loginMessage.textContent = `Welcome, ${username}!`;
                 }
-                updateApiStatus(isValid);
+                
+                if (loginSection) loginSection.style.display = 'none';
+                if (accountSection) accountSection.classList.add('active');
+                
+                if (window.userAuth?.apiKey) {
+                    const isValid = await window.userAuth.validateApiKey();
+                    if (isValid) {
+                        setTimeout(() => {
+                            if (accountSection) accountSection.classList.remove('active');
+                            if (gradeSelectorSection) gradeSelectorSection.classList.add('active');
+                        }, 500);
+                    }
+                    updateApiStatus(isValid);
+                }
+            } else {
+                if (loginMessage) {
+                    loginMessage.style.color = '#ef4444';
+                    loginMessage.textContent = 'Please enter both username and password.';
+                }
             }
-        } else {
-            loginMessage.style.color = '#ef4444';
-            loginMessage.textContent = 'Invalid credentials.';
-            loginMessage.style.animation = 'shake 0.5s ease-in-out';
-        }
-    });
+        });
+    }
 
     // Register form handler with improved feedback
-    registerForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const username = document.getElementById('newUsername').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('newPassword').value.trim();
-        const confirmPass = document.getElementById('confirmPassword').value.trim();
+    if (registerForm) {
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('newUsername')?.value.trim();
+            const email = document.getElementById('email')?.value.trim();
+            const password = document.getElementById('newPassword')?.value.trim();
+            const confirmPassword = document.getElementById('confirmPassword')?.value.trim();
 
-        registerMessage.className = '';
-        
-        if (password !== confirmPass) {
-            registerMessage.textContent = 'Passwords do not match.';
-            registerMessage.classList.add('error');
-            return;
-        }
+            if (!username || !email || !password || !confirmPassword) {
+                if (registerMessage) {
+                    registerMessage.textContent = 'Please fill in all fields.';
+                    registerMessage.style.color = '#ef4444';
+                }
+                return;
+            }
 
-        // TODO: Add your registration API call here
-        registerMessage.textContent = 'Account created successfully! Please login.';
-        registerMessage.classList.add('success');
-        
-        setTimeout(() => {
-            hideModal(registerModal);
-            setTimeout(() => showModal(authModal), 300);
-        }, 2000);
-    });
+            if (password !== confirmPassword) {
+                if (registerMessage) {
+                    registerMessage.textContent = 'Passwords do not match.';
+                    registerMessage.style.color = '#ef4444';
+                }
+                return;
+            }
 
-    // API key handling with visual feedback
-    saveApiKeyBtn.addEventListener('click', async () => {
-        const key = apiKeyInput.value.trim();
-        if (key) {
-            saveApiKeyBtn.disabled = true;
-            saveApiKeyBtn.textContent = 'Validating...';
-            
-            window.userAuth.setApiKey(key);
-            const isValid = await window.userAuth.validateApiKey();
-            updateApiStatus(isValid);
-            
-            if (isValid) {
-                gradeSelector.style.display = 'flex';
-                gradeSelector.style.opacity = '0';
-                setTimeout(() => gradeSelector.style.opacity = '1', 10);
-                apiKeyInput.value = '';
+            if (registerMessage) {
+                registerMessage.textContent = 'Account created successfully!';
+                registerMessage.style.color = '#22c55e';
             }
             
-            saveApiKeyBtn.disabled = false;
-            saveApiKeyBtn.textContent = 'Save API Key';
-        }
-    });
+            setTimeout(() => {
+                if (registerModal) registerModal.classList.remove('active');
+                toggleBodyScroll(false);
+                if (registerForm) registerForm.reset();
+                if (authModal) authModal.classList.add('active');
+            }, 1500);
+        });
+    }
+
+    // API key handling with visual feedback
+    if (saveApiKeyBtn) {
+        saveApiKeyBtn.addEventListener('click', async () => {
+            const apiKey = apiKeyInput?.value.trim();
+            if (apiKey && window.userAuth) {
+                window.userAuth.apiKey = apiKey;
+                const isValid = await window.userAuth.validateApiKey();
+                updateApiStatus(isValid);
+                
+                if (isValid) {
+                    setTimeout(() => {
+                        if (accountSection) accountSection.classList.remove('active');
+                        if (gradeSelectorSection) gradeSelectorSection.classList.add('active');
+                    }, 500);
+                }
+            }
+        });
+    }
 
     // Update API status display with animations
     function updateApiStatus(isValid) {
-        apiStatus.className = isValid ? 'valid' : 'invalid';
-        apiStatus.textContent = isValid 
-            ? '✓ API Key Valid' 
-            : '✗ Invalid API Key';
-        
-        if (isValid) {
-            const grades = window.userAuth.getAccessibleGrades();
-            accessibleGrades.textContent = `Access granted to: ${grades.join(', ')}`;
-            accessibleGrades.style.animation = 'fadeIn 0.5s ease-out';
-        } else {
-            accessibleGrades.textContent = '';
+        if (apiStatus) {
+            apiStatus.textContent = isValid ? 'API Key: Valid' : 'API Key: Invalid';
+            apiStatus.style.color = isValid ? '#22c55e' : '#ef4444';
         }
+        if (accessibleGrades) {
+            accessibleGrades.textContent = isValid ? 'Access: All Grades' : '';
+        }
+    }
+
+    // Handle Account Section Display
+    function showAccountSection() {
+        document.querySelector('.login-section').classList.add('hidden');
+        accountSection.classList.add('active');
+    }
+
+    // Handle Grade Selector Display
+    function showGradeSelector() {
+        accountSection.classList.remove('active');
+        gradeSelectorSection.classList.add('active');
     }
 
     // Grade selection handling with improved feedback
@@ -187,4 +277,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             }, index * 200);
         });
     }, 500);
+
+    // Add smooth transitions for all interactive elements
+    document.querySelectorAll('.feature-card, .primary-btn, .secondary-btn, .contact-btn')
+        .forEach(element => {
+            element.style.transition = 'all 0.3s ease';
+        });
 });
