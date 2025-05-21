@@ -1,18 +1,27 @@
 // grade11screen.js - Render 11th grade subjects
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function() {
     const subjects = [
-        { name: 'English', file: '11th English.html' },
-        { name: '(name)', file: '11th (name).html' },
-        { name: '(name2)', file: '11th (name2).html' }
+        { name: 'English', link: '11th English.html' },
+        { name: 'Biology', link: '11th Biology.html' },
+        { name: 'History', link: '11th History.html' }
     ];
-    const list = document.getElementById('subjectsList11');
+
+    const subjectsList = document.getElementById('subjectsList11');
+    
     subjects.forEach(subject => {
-        const btn = document.createElement('a');
-        btn.className = 'subject-btn';
-        btn.textContent = subject.name;
-        btn.href = subject.file;
-        btn.target = '_blank';
-        list.appendChild(btn);
+        const card = document.createElement('div');
+        card.className = 'subject-card';
+        
+        card.innerHTML = `
+            <i class="fas fa-book"></i>
+            <h3>${subject.name}</h3>
+            <button class="subject-btn" onclick="window.location.href='${subject.link}'">
+                <i class="fas fa-arrow-right"></i>
+                View Content
+            </button>
+        `;
+        
+        subjectsList.appendChild(card);
     });
 });

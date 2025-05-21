@@ -15,20 +15,20 @@
         <!-- Landing Section -->
         <div class="landing-section">
             <div class="header">
-                <h1 class="site-title" id="siteTitleClickable" style="cursor:pointer;">Shared Answers</h1>
-                <p class="site-subtitle">Your Gateway to Academic Excellence</p>
+                <h1 class="site-title" id="siteTitleClickable" style="cursor:pointer;">Key</h1>
+                <p class="site-subtitle">Fully Completed Assignments Throughout time</p>
             </div>
             
             <div class="features-grid">
                 <div class="feature-card">
                     <i class="fas fa-graduation-cap"></i>
                     <h3>Multiple Grades</h3>
-                    <p>Access comprehensive resources for 10th and 11th grade subjects</p>
+                    <p>Access The Full Recourses for 10th and 11th grade Classes</p>
                 </div>
                 <div class="feature-card">
                     <i class="fas fa-book-reader"></i>
                     <h3>Complete Solutions</h3>
-                    <p>Find detailed answers and explanations for all subjects</p>
+                    <p>Find The Full Answers Multiple subjects</p>
                 </div>
                 <div class="feature-card">
                     <i class="fas fa-clock"></i>
@@ -228,28 +228,125 @@
     </div>
     <script src="https://kit.fontawesome.com/c4254e24a8.js" crossorigin="anonymous"></script>
     <script src="MainRecourses/userAuth.js"></script>
-    <script src="MainRecourses/MainPage.js"></script>
-    <script>
-    // Floating bubbles animation
-    function randomBetween(a, b) { return a + Math.random() * (b - a); }
-    function createBubble() {
-        const bubble = document.createElement('div');
-        bubble.className = 'bubble';
-        const size = randomBetween(32, 120);
-        bubble.style.width = `${size}px`;
-        bubble.style.height = `${size}px`;
-        bubble.style.left = `${randomBetween(0, 100)}vw`;
-        bubble.style.animationDuration = `${randomBetween(8, 18)}s`;
-        bubble.style.opacity = randomBetween(0.12, 0.28);
-        bubble.style.filter = `blur(${randomBetween(0, 2)}px)`;
-        document.querySelector('.bubbles-bg').appendChild(bubble);
-        setTimeout(() => bubble.remove(), 18000);
-    }
-    function spawnBubbles() {
-        for (let i = 0; i < 16; i++) setTimeout(createBubble, i * 600);
-        setInterval(createBubble, 1200);
-    }
-    window.addEventListener('DOMContentLoaded', spawnBubbles);
+    <script src="MainRecourses/MainPage.js"></script>    <script>
+    // Enhanced floating bubbles animation with performance optimizations
+    const bubbleManager = {
+        container: null,
+        isPageVisible: true,
+        isRunning: false,
+        spawnInterval: null,
+        cleanupInterval: null,
+        MAX_BUBBLES: 10,
+        SPAWN_DELAY: 2500,
+        CLEANUP_INTERVAL: 5000,
+
+        init() {
+            this.container = document.querySelector('.bubbles-bg');
+            if (!this.container) return;
+
+            // Visibility change handling
+            document.addEventListener('visibilitychange', () => {
+                this.isPageVisible = document.visibilityState === 'visible';
+                if (this.isPageVisible) {
+                    this.start();
+                } else {
+                    this.pause();
+                }
+            });
+
+            // Handle page unload
+            window.addEventListener('beforeunload', () => this.cleanup());
+
+            // Start the animation
+            this.start();
+
+            // Set up periodic cleanup
+            this.cleanupInterval = setInterval(() => this.cleanupOldBubbles(), this.CLEANUP_INTERVAL);
+        },
+
+        createBubble() {
+            if (!this.isPageVisible || !this.isRunning) return;
+            if (this.container.children.length >= this.MAX_BUBBLES) return;
+
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            
+            // More conservative size and animation settings
+            const size = Math.floor(this.randomBetween(32, 96));
+            bubble.style.width = `${size}px`;
+            bubble.style.height = `${size}px`;
+            bubble.style.left = `${this.randomBetween(5, 95)}vw`;
+            bubble.style.animationDuration = `${this.randomBetween(12, 15)}s`;
+            bubble.style.opacity = this.randomBetween(0.15, 0.22);
+            bubble.style.filter = `blur(${this.randomBetween(0.5, 1)}px)`;
+
+            // Add timestamp for cleanup
+            bubble.dataset.created = Date.now().toString();
+            
+            // Remove bubble when animation ends
+            bubble.addEventListener('animationend', () => {
+                if (this.container.contains(bubble)) {
+                    bubble.remove();
+                }
+            });
+
+            this.container.appendChild(bubble);
+        },
+
+        randomBetween(min, max) {
+            return min + Math.random() * (max - min);
+        },
+
+        start() {
+            if (this.isRunning) return;
+            this.isRunning = true;
+            
+            // Initial bubbles
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => this.createBubble(), i * 800);
+            }
+
+            // Continuous bubble creation
+            this.spawnInterval = setInterval(() => this.createBubble(), this.SPAWN_DELAY);
+        },
+
+        pause() {
+            this.isRunning = false;
+            if (this.spawnInterval) {
+                clearInterval(this.spawnInterval);
+                this.spawnInterval = null;
+            }
+        },
+
+        cleanupOldBubbles() {
+            if (!this.container) return;
+            
+            const now = Date.now();
+            const bubbles = this.container.getElementsByClassName('bubble');
+            
+            // Convert to array to avoid issues with live HTMLCollection
+            Array.from(bubbles).forEach(bubble => {
+                const created = parseInt(bubble.dataset.created || '0');
+                if (now - created > 15000) { // Remove bubbles older than 15 seconds
+                    bubble.remove();
+                }
+            });
+        },
+
+        cleanup() {
+            this.pause();
+            if (this.cleanupInterval) {
+                clearInterval(this.cleanupInterval);
+                this.cleanupInterval = null;
+            }
+            if (this.container) {
+                this.container.innerHTML = '';
+            }
+        }
+    };
+
+    // Initialize bubble animation when DOM is loaded
+    window.addEventListener('DOMContentLoaded', () => bubbleManager.init());
 
     // Contact Modal logic (remade)
     document.addEventListener('DOMContentLoaded', function() {

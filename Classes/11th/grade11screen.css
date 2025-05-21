@@ -1,49 +1,93 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
-/* Fancy dashboard and subject styles for grade screens */
+/* Modern theme matching MainPage */
+:root {
+    --primary-dark: #171717;
+    --primary-light: #3d3d3d;
+    --gradient-main: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%);
+    --text-primary: #ffffff;
+    --text-secondary: #e0e0e0;
+    --glass-bg: rgba(255, 255, 255, 0.95);
+    --glass-border: rgba(255, 255, 255, 0.3);
+}
+
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Poppins', 'Segoe UI', 'Roboto', Arial, sans-serif;
-    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
     min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    background: linear-gradient(120deg, #c6c6c6 0%, #373737 100%);
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    overflow-x: hidden;
+    color: var(--text-primary);
 }
 
 .grade-dashboard {
-    width: 90%;
-    max-width: 520px;
-    margin: 20px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 28px;
-    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
-    padding: 48px 36px;
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    gap: 36px;
     align-items: center;
-    animation: fadeIn 1.2s cubic-bezier(.4,0,.2,1);
-    backdrop-filter: blur(12px) saturate(180%);
-    position: relative;
+    padding: 2rem;
+}
+
+/* Bubbles Background */
+.bubbles-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    pointer-events: none;
     overflow: hidden;
 }
 
-.grade-dashboard::before {
-    content: '';
+.bubble {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 5px;
-    background: linear-gradient(90deg, #764ba2, #667eea);
+    border-radius: 50%;
+    background: linear-gradient(135deg, #e7e7e7 0%, #161616 100%);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    animation: floatUp 12s linear infinite;
+    will-change: transform, opacity;
+    filter: blur(0.5px);
 }
 
-@keyframes fadeIn {
-    from { 
+@keyframes floatUp {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 0.25;
+    }
+    80% {
+        opacity: 0.4;
+    }
+    100% {
+        transform: translateY(-110vh) scale(1.1);
+        opacity: 0.1;
+    }
+}
+
+.dashboard-title {
+    font-size: 3rem;
+    font-weight: 900;
+    margin: 2.5rem 0;
+    color: var(--text-primary);
+    text-align: center;
+    letter-spacing: 0.5px;
+    background: linear-gradient(135deg, var(--text-primary) 0%, rgba(255,255,255,0.85) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.15),
+        0 0 10px rgba(255, 255, 255, 0.2);
+    animation: titleFadeIn 0.8s ease-out forwards;
+}
+
+@keyframes titleFadeIn {
+    from {
         opacity: 0;
-        transform: translateY(40px);
+        transform: translateY(-10px);
     }
     to {
         opacity: 1;
@@ -51,129 +95,129 @@ body {
     }
 }
 
-.dashboard-title {
-    font-size: 2.4rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-align: center;
-    margin: 0;
-    padding-bottom: 20px;
-    position: relative;
-}
-
-.dashboard-title::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
-    height: 4px;
-    background: linear-gradient(90deg, #764ba2, #667eea);
-    border-radius: 2px;
-}
-
 .subjects-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
     width: 100%;
-    padding: 20px 0;
+    max-width: 1200px;
+    margin: 2rem auto;
 }
 
-.subject-btn {
-    padding: 16px 24px;
-    background: white;
-    color: #764ba2;
-    border: 2px solid #764ba2;
-    border-radius: 12px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: none;
+.subject-card {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%);
+    border-radius: 1.2rem;
+    padding: 2rem;
     text-align: center;
+    border: 1px solid var(--glass-border);
     transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 
+        0 4px 20px rgba(0, 0, 0, 0.12),
+        0 1px 3px rgba(0, 0, 0, 0.05);
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    position: relative;
+    overflow: hidden;
 }
 
-.subject-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-    z-index: -1;
-    transition: opacity 0.3s ease;
-    opacity: 0;
+.subject-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.18),
+        0 4px 12px rgba(0, 0, 0, 0.08);
+    background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
 }
 
-.subject-btn:hover {
-    color: white;
-    transform: translateY(-3px);
-    box-shadow: 0 7px 14px rgba(118, 75, 162, 0.25);
+.subject-card h3 {
+    color: var(--text-primary);
+    font-size: 1.8rem;
+    margin: 1rem 0;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.subject-btn:hover::before {
-    opacity: 1;
+.subject-card i {
+    font-size: 2.2rem;
+    color: var(--text-primary);
+    opacity: 0.9;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .back-btn {
-    margin-top: 24px;
-    padding: 14px 32px;
-    background: transparent;
-    color: #764ba2;
-    border: 2px solid #764ba2;
-    border-radius: 10px;
-    font-size: 1rem;
+    background: var(--gradient-main);
+    color: var(--text-primary);
+    border: none;
+    border-radius: 2em;
+    padding: 0.85em 2.2em;
+    font-size: 1.15rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-}
-
-.back-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-    z-index: -1;
-    transition: opacity 0.3s ease;
-    opacity: 0;
+    margin-top: 2rem;
+    box-shadow: 
+        0 4px 15px rgba(0, 0, 0, 0.1),
+        0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .back-btn:hover {
-    color: white;
+    transform: translateY(-2px);
+    box-shadow: 
+        0 6px 20px rgba(0, 0, 0, 0.15),
+        0 2px 4px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
 }
 
-.back-btn:hover::before {
-    opacity: 1;
+/* Icon styles */
+.back-btn i {
+    margin-right: 8px;
 }
 
-@media (max-width: 600px) {
-    .grade-dashboard {
-        padding: 32px 20px;
-    }
-    
+.subject-btn {
+    background: var(--text-primary);
+    color: var(--primary-dark);
+    border: none;
+    border-radius: 1.5rem;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-top: 1rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.subject-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    background: var(--text-primary);
+    color: var(--primary-light);
+}
+
+.subject-btn i {
+    font-size: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.subject-btn:hover i {
+    transform: translateX(4px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
     .dashboard-title {
-        font-size: 1.8rem;
+        font-size: 2.2rem;
     }
     
     .subjects-list {
         grid-template-columns: 1fr;
+        padding: 0 1rem;
     }
 }

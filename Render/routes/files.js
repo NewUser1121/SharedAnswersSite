@@ -27,4 +27,36 @@ router.get('/download/:fileId', apikey, async (req, res) => {
   res.status(501).json({ error: 'Download not implemented yet' });
 });
 
+// Update Biology page content
+router.post('/update-biology', auth, async (req, res) => {
+  try {
+    const { grade, type, label, link } = req.body;
+    const filePath = `../../Classes/${grade}/${grade} Biology.html`;
+    
+    // Read current file
+    const fs = require('fs').promises;
+    let html = await fs.readFile(filePath, 'utf8');
+    
+    // Create new resource card
+    const icon = type === 'folder' ? 'fa-folder-open' : 'fa-file-alt';
+    const cardClass = type === 'folder' ? 'drive-link-card folder-link' : 'drive-link-card';
+    const newCard = `    <a class="${cardClass}" href="${link}" target="_blank" rel="noopener">
+      <i class="fas ${icon}"></i>
+      ${label}
+    </a>`;
+    
+    // Insert before the "View All" link
+    const insertPoint = html.lastIndexOf('folder-link');
+    html = html.slice(0, insertPoint) + newCard + '\n    ' + html.slice(insertPoint);
+    
+    // Save updated file
+    await fs.writeFile(filePath, html, 'utf8');
+    
+    res.json({ message: 'Biology page updated successfully' });
+  } catch (err) {
+    console.error('Error updating Biology page:', err);
+    res.status(500).json({ error: 'Failed to update Biology page' });
+  }
+});
+
 module.exports = router;
