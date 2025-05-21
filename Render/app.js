@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const morgan = require('morgan');
+const multer = require('multer');
 
 const app = express();
 
@@ -22,10 +23,12 @@ mongoose.connect(process.env.MONGODB_URI, {
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const fileRoutes = require('./routes/files');
+const uploadRoutes = require('./routes/upload');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/files', fileRoutes);
+app.use('/api/upload', uploadRoutes);
 
 app.get('/', (req, res) => {
   res.json({ status: 'API running' });
