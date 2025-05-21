@@ -82,22 +82,23 @@ document.addEventListener('DOMContentLoaded', async () => {
                 document.body.style.overflow = '';
             }
         });
-    }
-
-    // Close modals when clicking outside
-    window.addEventListener('click', (e) => {
-        if (e.target === authModal) {
-            authModal.classList.remove('active');
-            document.body.style.overflow = '';
-            setTimeout(() => {
-                if (loginSection) loginSection.style.display = 'block';
-                if (accountSection) accountSection.classList.remove('active');
-                if (gradeSelectorSection) gradeSelectorSection.classList.remove('active');
-            }, 300);
-        }
-        if (e.target === registerModal) {
-            registerModal.classList.remove('active');
-            document.body.style.overflow = '';
+    }    // Close modals when clicking outside
+    window.addEventListener('mousedown', (e) => {
+        // Only close if clicking the backdrop (not the modal content)
+        if ((e.target === authModal || e.target === registerModal) && !e.target.closest('.glass')) {
+            e.preventDefault();
+            if (e.target === authModal) {
+                authModal.classList.remove('active');
+                document.body.style.overflow = '';
+                setTimeout(() => {
+                    if (loginSection) loginSection.style.display = 'block';
+                    if (accountSection) accountSection.classList.remove('active');
+                    if (gradeSelectorSection) gradeSelectorSection.classList.remove('active');
+                }, 300);
+            } else if (e.target === registerModal) {
+                registerModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
         }
     });
 

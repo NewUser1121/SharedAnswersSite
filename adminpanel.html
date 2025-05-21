@@ -113,18 +113,38 @@
   </div>
   <div class="admin-panel-container" id="adminPanel">
     <div class="admin-panel-title">Shared Answers Admin Panel</div>
-    <div class="admin-section">
-      <h3>Upload File</h3>
-      <form id="fileUploadForm">
-        <label for="fileClass">Class:</label>
+    <div class="admin-section">      <h3>Add Resource</h3>      <form id="fileUploadForm">
+        <label for="fileClass">Grade:</label>
         <select id="fileClass" required>
-          <option value="">Select Class</option>
+          <option value="">Select Grade</option>
           <option value="10th">10th</option>
           <option value="11th">11th</option>
         </select>
-        <label for="fileInput">File:</label>
-        <input type="file" id="fileInput" required>
-        <button type="submit">Upload</button>
+        <label for="subject">Subject:</label>
+        <select id="subject" required>
+          <option value="">Select Subject</option>
+          <option value="Biology">Biology</option>
+          <option value="English">English</option>
+          <option value="History">History</option>
+        </select>
+        <label for="resourceType">Type:</label>
+        <select id="resourceType" required>
+          <option value="">Select Type</option>
+          <option value="file">File Upload</option>
+          <option value="folder">Add Folder</option>
+          <option value="link">Add Link</option>
+        </select>
+        <div id="fileInputGroup">
+          <label for="fileInput">File:</label>
+          <input type="file" id="fileInput">
+        </div>
+        <div id="linkInputGroup" style="display:none;">
+          <label for="linkInput">Drive Link:</label>
+          <input type="text" id="linkInput" placeholder="https://drive.google.com/...">
+        </div>
+        <label for="displayLabel">Display Label:</label>
+        <input type="text" id="displayLabel" placeholder="e.g. Chapter 10.1 Worksheet" required>
+        <button type="submit">Add Resource</button>
         <div id="fileUploadMessage"></div>
       </form>
     </div>
@@ -199,11 +219,164 @@
         apiKeyGenMessage.textContent = 'Copied!';
         setTimeout(() => apiKeyGenMessage.textContent = '', 1200);
       }
-    };
-    clearApiKeyBtn.onclick = () => {
+    };    clearApiKeyBtn.onclick = () => {
       generatedApiKey.value = '';
       apiKeyGenMessage.textContent = '';
     };
+
+    // Resource Management System
+    const resourceType = document.getElementById('resourceType');
+    const fileInputGroup = document.getElementById('fileInputGroup');
+    const linkInputGroup = document.getElementById('linkInputGroup');
+    const fileInput = document.getElementById('fileInput');
+    const linkInput = document.getElementById('linkInput');
+    const displayLabel = document.getElementById('displayLabel');
+    const fileUploadForm = document.getElementById('fileUploadForm');
+    
+    // Toggle input fields based on resource type
+    resourceType.addEventListener('change', function() {
+      fileInputGroup.style.display = this.value === 'file' ? 'block' : 'none';
+      linkInputGroup.style.display = this.value !== 'file' ? 'block' : 'none';
+      
+      if (this.value === 'file') {
+        fileInput.required = true;
+        linkInput.required = false;
+      } else {
+        fileInput.required = false;
+        linkInput.required = true;
+      }
+    });
+
+    // Handle resource addition
+    fileUploadForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const classValue = document.getElementById('fileClass').value;
+      const type = resourceType.value;
+      const label = displayLabel.value;
+      
+      try {
+        let link = '';
+        if (type === 'file') {
+          // Handle file upload and get link
+          // You'll need to implement your file upload logic here
+          link = await uploadFile(fileInput.files[0]);
+        } else {
+          link = linkInput.value;
+        }
+        
+        await updateBiologyPage(classValue, type, label, link);
+        document.getElementById('fileUploadMessage').textContent = 'Resource added successfully!';
+        document.getElementById('fileUploadMessage').className = 'admin-message';
+      } catch (error) {
+        document.getElementById('fileUploadMessage').textContent = 'Error: ' + error.message;
+        document.getElementById('fileUploadMessage').className = 'admin-error';
+      }
+    });
+
+    async function uploadFile(file) {
+      // Implement your file upload logic here
+      // This should return the Google Drive link to the uploaded file
+      return 'https://drive.google.com/file/...';
+    }
+
+    async function updateBiologyPage(grade, type, label, link) {
+      const path = `Classes/${grade}/${grade} Biology.html`;
+      
+      // Read the current file content
+      const response = await fetch(path);
+      let html = await response.text();
+      
+      // Create the new resource card HTML
+      const newCard = createResourceCard(type, label, link);
+      
+      // Insert the new card before the "View All" link
+      const insertPoint = html.lastIndexOf('folder-link');
+      html = html.slice(0, insertPoint) + newCard + '\n    ' + html.slice(insertPoint);
+      
+      // Save the updated file
+      await saveFile(path, html);
+    }
+
+    function createResourceCard(type, label, link) {
+      const icon = type === 'folder' ? 'fa-folder-open' : 'fa-file-alt';
+      const cardClass = type === 'folder' ? 'drive-link-card folder-link' : 'drive-link-card';
+      
+      return `    <a class="${cardClass}" href="${link}" target="_blank" rel="noopener">
+      <i class="fas ${icon}"></i>
+      ${label}
+    </a>`;
+    }
+
+    async function saveFile(path, content) {
+      // Implement your file saving logic here
+      // This should save the updated HTML file back to the server
+      // You might want to use a server endpoint for this
+    };
+
+    // Resource upload handling
+    async function handleResourceUpload(formData) {
+      try {
+        const response = await fetch('/api/upload/resource', {
+          method: 'POST',
+          body: formData
+        });
+        
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || 'Upload failed');
+        }
+        
+        const result = await response.json();
+        return result;
+      } catch (error) {
+        throw error;
+      }
+    }
+
+    // Update file upload form handler
+    fileUploadForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const messageEl = document.getElementById('fileUploadMessage');
+      messageEl.className = '';
+      messageEl.textContent = 'Processing...';
+
+      try {        const formData = new FormData();
+        const classTag = document.getElementById('fileClass').value;
+        const subject = document.getElementById('subject').value;
+        
+        if (!classTag || !subject) {
+            throw new Error('Please select both grade and subject');
+        }
+        
+        formData.append('classTag', classTag);
+        formData.append('subject', subject);
+        formData.append('type', resourceType.value);
+        formData.append('label', displayLabel.value);
+        
+        if (resourceType.value === 'file' && fileInput.files.length > 0) {
+          formData.append('file', fileInput.files[0]);
+        } else if (resourceType.value !== 'file') {
+          formData.append('driveLink', linkInput.value);
+        } else {
+          throw new Error('Please select a file or provide a link');
+        }
+
+        const result = await handleResourceUpload(formData);
+        
+        messageEl.className = 'admin-message';
+        messageEl.textContent = 'Resource added successfully!';
+        
+        // Reset form
+        fileUploadForm.reset();
+        fileInputGroup.style.display = 'none';
+        linkInputGroup.style.display = 'none';
+        
+      } catch (error) {
+        messageEl.className = 'admin-error';
+        messageEl.textContent = `Error: ${error.message}`;
+      }
+    });
+
     generateApiKeyBtn.onclick = async () => {
       const username = prompt('Enter username for API key:');
       const classTag = document.getElementById('apiKeyClassSelect').value;

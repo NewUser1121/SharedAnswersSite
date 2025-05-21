@@ -4,14 +4,71 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>10th Grade Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="grade10screen.css">
 </head>
 <body>
+    <div class="bubbles-bg" aria-hidden="true"></div>
     <div class="grade-dashboard">
         <div class="dashboard-title">10th Grade Dashboard</div>
         <div class="subjects-list" id="subjectsList10"></div>
-        <button class="back-btn" onclick="window.location.href='../../MainPage.html'">Back to Main Page</button>
+        <button class="back-btn" onclick="window.location.href='../../MainPage.html'">
+            <i class="fas fa-arrow-left"></i> Back to Main Page
+        </button>
     </div>
-    <script src="Grade10screen.js"></script>
+    <script src="Grade10screen.js"></script>    <script>
+        // Floating bubbles animation with performance optimizations
+        const bubbleContainer = document.querySelector('.bubbles-bg');
+        let isPageVisible = true;
+        let bubbleInterval;
+        const MAX_BUBBLES = 12;
+        
+        function randomBetween(a, b) { return a + Math.random() * (b - a); }
+        
+        function createBubble() {
+            // Don't create more bubbles if we already have the maximum
+            if (bubbleContainer.children.length >= MAX_BUBBLES) return;
+            
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            const size = randomBetween(32, 100);
+            bubble.style.width = `${size}px`;
+            bubble.style.height = `${size}px`;
+            bubble.style.left = `${randomBetween(0, 100)}vw`;
+            bubble.style.animationDuration = `${randomBetween(10, 15)}s`;
+            bubble.style.opacity = randomBetween(0.15, 0.25);
+            bubble.style.filter = `blur(${randomBetween(0.5, 1.5)}px)`;
+            
+            bubbleContainer.appendChild(bubble);
+            
+            // Remove the bubble when animation ends
+            bubble.addEventListener('animationend', () => bubble.remove());
+        }
+        
+        function spawnBubbles() {
+            // Create initial bubbles
+            for (let i = 0; i < 8; i++) {
+                setTimeout(() => isPageVisible && createBubble(), i * 800);
+            }
+            
+            // Set up interval for continuous bubble creation
+            bubbleInterval = setInterval(() => {
+                if (isPageVisible) createBubble();
+            }, 2000);
+        }
+        
+        // Handle page visibility changes to pause animation when tab is not visible
+        document.addEventListener('visibilitychange', () => {
+            isPageVisible = document.visibilityState === 'visible';
+            if (!isPageVisible) {
+                clearInterval(bubbleInterval);
+            } else {
+                spawnBubbles();
+            }
+        });
+        
+        // Start animation when page loads
+        window.addEventListener('DOMContentLoaded', spawnBubbles);
+    </script>
 </body>
 </html>

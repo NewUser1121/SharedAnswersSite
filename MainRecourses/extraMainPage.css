@@ -2,7 +2,7 @@
 .main-bg {
     min-height: 100vh;
     background: 
-        linear-gradient(120deg, #667eea 0%, #764ba2 100%); /* Bluish to purpleish fade */
+        linear-gradient(120deg, #c6c6c6 0%, #373737 100%); /* Bluish to purpleish fade */
     background-attachment: fixed;
     display: flex;
     flex-direction: column;
@@ -109,10 +109,10 @@
 }
 
 /* Example bubble colors */
-.bubble-blue { background: radial-gradient(circle, #7f9cf5 60%, #667eea 100%); }
-.bubble-purple { background: radial-gradient(circle, #a18cd1 60%, #764ba2 100%); }
-.bubble-pink { background: radial-gradient(circle, #fbc2eb 60%, #a18cd1 100%); }
-.bubble-cyan { background: radial-gradient(circle, #89f7fe 60%, #66a6ff 100%); }
+.bubble-blue { background: radial-gradient(circle, #ffffff 60%, #6a6a6a 100%); }
+.bubble-purple { background: radial-gradient(circle, #121212 60%, #d4d4d4 100%); }
+.bubble-pink { background: radial-gradient(circle, #000000 60%, #ffffff 100%); }
+.bubble-cyan { background: radial-gradient(circle, #c0c0c0 60%, #5f5f5f 100%); }
 
 .glass {
     background: rgba(255, 255, 255, 0.95);
@@ -193,7 +193,7 @@
     bottom: -120px;
     border-radius: 50%;
     opacity: 0.25;
-    background: linear-gradient(135deg, #aee1f9 0%, #f7c8ff 100%);
+    background: linear-gradient(135deg, #e7e7e7 0%, #161616 100%);
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
     animation: floatUp 12s linear infinite;
     will-change: transform, opacity;
@@ -224,31 +224,65 @@
     font-size: 3.7rem;
     font-weight: 900;
     letter-spacing: 2.5px;
-    background: linear-gradient(90deg, #6dd5ed 0%, #f7797d 100%);
+    color: #000;
+    background: linear-gradient(135deg, 
+        #000000 0%,
+        #323232 50%,
+        #000000 100%
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    filter: drop-shadow(0 0 16px #6dd5ed88) drop-shadow(0 0 32px #f7797d55);
-    text-shadow: 0 0 18px #fff8, 0 2px 8px #6dd5ed55, 0 0 32px #f7797d33;
-    transition: transform 0.2s cubic-bezier(.4,2,.6,1), text-shadow 0.2s;
+    /* Enhanced glow effect without intersecting lines */
+    filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.7))
+           drop-shadow(0 0 3px rgba(255, 255, 255, 0.4));
+    text-shadow: 
+        0 0 25px rgba(255, 255, 255, 0.3),
+        0 0 45px rgba(255, 255, 255, 0.2);
+    /* Crisp edges */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: all 0.3s ease;
 }
+
+/* Clean hover effect */
 .site-title:hover {
-    transform: scale(1.045) rotate(-1deg);
-    text-shadow: 0 0 32px #fff, 0 4px 24px #6dd5ed88, 0 0 48px #f7797d55;
+    transform: translateY(-2px);
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.8))
+           drop-shadow(0 0 4px rgba(255, 255, 255, 0.5));
+    text-shadow: 
+        0 0 30px rgba(255, 255, 255, 0.4),
+        0 0 50px rgba(255, 255, 255, 0.3);
 }
+
+/* Refined subtitle to match */
 .site-subtitle {
-    font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
     font-size: 1.5rem;
     font-weight: 500;
-    color: #444;
     letter-spacing: 1px;
-    margin-top: 0.5rem;
+    margin-top: 0.8rem;
     margin-bottom: 2rem;
-    text-shadow: 0 2px 12px rgba(0,0,0,0.08);
-    background: linear-gradient(90deg, #43cea2 0%, #185a9d 100%);
+    color: #1a1a1a;
+    background: linear-gradient(135deg, 
+        #1a1a1a 0%,
+        #4a4a4a 50%,
+        #1a1a1a 100%
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    opacity: 0.9;
+}
+
+@media (max-width: 600px) {
+    .site-title {
+        font-size: 2.2rem;
+    }
+    .site-subtitle {
+        font-size: 1.1rem;
+    }
 }
 
 /* Make site title look clickable for admin panel link */
@@ -263,14 +297,14 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5em;
-    background: linear-gradient(90deg, #43cea2 0%, #185a9d 100%);
+    background: linear-gradient(90deg, #171717 0%, #a4a4a4 100%);
     color: #fff;
     border: none;
     border-radius: 2em;
     padding: 0.85em 2.2em;
     font-size: 1.15rem;
     font-weight: 700;
-    box-shadow: 0 4px 24px rgba(67,206,162,0.12);
+    box-shadow: 0 4px 24px rgb(124, 124, 124);
     cursor: pointer;
     margin: 0 0.5em 0.5em 0;
     transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
@@ -280,9 +314,9 @@
 .cta-buttons .primary-btn:hover,
 .cta-buttons .secondary-btn:hover,
 .cta-buttons .contact-btn:hover {
-    background: linear-gradient(90deg, #185a9d 0%, #43cea2 100%);
+    background: linear-gradient(90deg, #171717 0%, #a4a4a4 100%);
     transform: translateY(-2px) scale(1.04);
-    box-shadow: 0 8px 32px rgba(24,90,157,0.18);
+    box-shadow: 0 8px 32px rgba(96, 96, 96, 0.999);
 }
 
 /* Responsive tweaks for title */
@@ -319,7 +353,7 @@
     width: 100%;
     background: #fff;
     border-radius: 1.5em;
-    box-shadow: 0 2px 12px rgba(67,206,162,0.08);
+    box-shadow: 0 2px 12px rgb(203, 203, 203);
     padding: 0.5em 1.1em;
     margin-bottom: 0.2em;
     transition: box-shadow 0.2s;
@@ -327,7 +361,7 @@
 }
 .input-group i {
     font-size: 1.2em;
-    color: #43cea2;
+    color: #3d3d3d;
     min-width: 1.5em;
     text-align: center;
     position: relative;
@@ -353,7 +387,7 @@
     font-weight: 500;
 }
 .input-group .input-icon {
-    color: #185a9d;
+    color: #656565;
     min-width: 1.5em;
     align-self: center;
 }
@@ -361,7 +395,7 @@
 /* Fix for icon overlap on confirm password */
 .input-group .input-icon {
     min-width: 1.5em;
-    color: #185a9d;
+    color: #717171;
 }
 
 /* Center modal content vertically */
@@ -430,7 +464,7 @@
     min-width: 220px;
     background: rgba(255,255,255,0.85);
     border-radius: 1.5em;
-    box-shadow: 0 2px 12px rgba(67,206,162,0.08);
+    box-shadow: 0 2px 12px rgba(168, 168, 168, 0.08);
     margin: 0 auto;
     padding: 1.5em 1.2em;
 }
@@ -527,7 +561,7 @@
     top: 18px;
     right: 28px;
     font-size: 2.2rem;
-    color: #667eea;
+    color: #b7b7b7;
     background: none;
     border: none;
     cursor: pointer;
@@ -551,6 +585,10 @@
     width: 80vw;
     background: rgba(255,255,255,0.99);
     border-radius: 2.5em;
+    margin: 2em auto;
+    position: relative;
+    top: auto;
+    transform: none;
     box-shadow: 0 24px 80px rgba(31,38,135,0.22), 0 2px 16px rgba(67,206,162,0.10);
     padding: 2.5em 2.5em 2em 2.5em;
     position: relative;
@@ -570,13 +608,13 @@
     font-size: 2.7rem;
     font-weight: 900;
     margin-bottom: 0.2em;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #171717 0%, #a4a4a4 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 .contact-modal-header p {
-    color: #4b5563;
+    color: #6b6b6b;
     font-size: 1.22rem;
     margin-bottom: 0;
 }
@@ -608,7 +646,7 @@
 }
 .contact-modal-card i {
     font-size: 2.2em;
-    color: #667eea;
+    color: #b9b9b9;
     margin-bottom: 0.7em;
     min-width: 2.2em;
     text-align: center;
@@ -628,7 +666,7 @@
     line-height: 1.4;
 }
 .copy-btn {
-    background: #667eea;
+    background: #b0b0b0;
     color: #fff;
     border: none;
     border-radius: 0.7em;
@@ -640,7 +678,7 @@
     transition: background 0.2s;
 }
 .copy-btn:hover {
-    background: #764ba2;
+    background: #919191;
 }
 .contact-modal-snapcode {
     display: flex;
@@ -724,7 +762,7 @@
     transition: color 0.2s;
 }
 .register-email-link:hover {
-    color: #764ba2;
+    color: #a0a0a0;
 }
 
 /* --- Enhanced Register Modal --- */
@@ -761,7 +799,7 @@
     color: #6c63ff;
     margin-bottom: 0.3em;
     letter-spacing: 1px;
-    background: linear-gradient(90deg, #6c63ff 0%, #43cea2 100%);
+    background: linear-gradient(90deg, #171717 0%, #a4a4a4 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -795,7 +833,7 @@
 }
 .input-group:focus-within {
     box-shadow: 0 4px 18px #6c63ff22;
-    border: 1.5px solid #6c63ff;
+    border: 1.5px solid #c9c9c9;
 }
 .input-group i {
     font-size: 1.25em;
@@ -993,4 +1031,97 @@
     max-width: 99vw;
     padding: 1em 0.7em;
   }
+}
+
+/* Contact Modal Card Updates */
+.contact-modal-card {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98) 0%,
+        rgba(255, 255, 255, 0.95) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 
+        0 4px 20px rgba(0, 0, 0, 0.08),
+        0 1px 3px rgba(0, 0, 0, 0.02);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.contact-modal-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 
+        0 8px 30px rgba(0, 0, 0, 0.12),
+        0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.contact-modal-card i {
+    color: #171717;
+    opacity: 0.9;
+}
+
+/* Copy Button Update */
+.copy-btn {
+    background: linear-gradient(135deg, #171717 0%, #3d3d3d 100%);
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.copy-btn:hover {
+    background: linear-gradient(135deg, #3d3d3d 0%, #171717 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Help Section Update */
+.help-container {
+    background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.98) 0%,
+        rgba(255, 255, 255, 0.95) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 
+        0 4px 20px rgba(0, 0, 0, 0.08),
+        0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.help-container h3 {
+    color: #171717;
+    font-weight: 800;
+}
+
+.contact-item {
+    color: #171717;
+}
+
+.contact-item i {
+    color: #171717;
+    opacity: 0.9;
+}
+
+/* Email Link Update */
+.register-email-link {
+    color: #171717;
+    text-decoration: none;
+    position: relative;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.register-email-link:hover {
+    color: #3d3d3d;
+}
+
+.register-email-link::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background: linear-gradient(90deg, #171717 0%, #3d3d3d 100%);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.register-email-link:hover::after {
+    transform: scaleX(1);
 }
