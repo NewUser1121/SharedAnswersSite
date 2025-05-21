@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Shared Answers</title>
+  <link rel="stylesheet" href="MainRecourses/extraMainPage.css">
+  <style>
+    .admin-login-container {
+      max-width: 400px;
+      margin: 6vh auto 0 auto;
+      background: #fff;
+      border-radius: 1.5em;
+      box-shadow: 0 8px 32px rgba(31,38,135,0.13);
+      padding: 2.5em 2em 2em 2em;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .admin-panel-container {
+      max-width: 900px;
+      margin: 4vh auto 0 auto;
+      background: #fff;
+      border-radius: 1.5em;
+      box-shadow: 0 8px 32px rgba(31,38,135,0.13);
+      padding: 2.5em 2em 2em 2em;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+    }
+    .admin-panel-container.active { display: flex; }
+    .admin-panel-title {
+      font-size: 2rem;
+      font-weight: 900;
+      background: linear-gradient(90deg,#43cea2 0%,#6c63ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1.2em;
+      text-align: center;
+    }
+    .admin-section { margin-bottom: 2em; width: 100%; }
+    .admin-section label { font-weight: 600; }
+    .admin-section input, .admin-section select {
+      margin-top: 0.5em;
+      margin-bottom: 1em;
+      padding: 0.7em 1em;
+      border-radius: 0.7em;
+      border: 1.5px solid #e0e7ef;
+      width: 100%;
+      font-size: 1em;
+    }
+    .admin-section button {
+      background: linear-gradient(90deg,#43cea2 0%,#6c63ff 100%);
+      color: #fff;
+      border: none;
+      border-radius: 2em;
+      padding: 0.7em 2em;
+      font-size: 1.1em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .admin-section button:hover {
+      background: linear-gradient(90deg,#6c63ff 0%,#43cea2 100%);
+      transform: translateY(-2px) scale(1.04);
+    }
+    .admin-files-list {
+      margin-top: 1em;
+      background: #f7f8fa;
+      border-radius: 1em;
+      padding: 1em;
+      box-shadow: 0 2px 12px #6c63ff11;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .admin-files-list ul { list-style: none; padding: 0; }
+    .admin-files-list li { margin-bottom: 0.7em; }
+    .admin-message { color: #22c55e; font-weight: 600; margin-top: 1em; }
+    .admin-error { color: #ef4444; font-weight: 600; margin-top: 1em; }
+    .api-key-gen-row {
+      display: flex;
+      gap: 1em;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    #generatedApiKey {
+      flex: 2;
+      min-width: 200px;
+    }
+    #userList {
+      list-style: none;
+      padding: 0;
+    }
+    #userDetails {
+      display: none;
+      margin-top: 1em;
+      background: #f7f8fa;
+      border-radius: 1em;
+      padding: 1em;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-login-container" id="adminLogin">
+    <h2>Admin Login</h2>
+    <form id="adminLoginForm">
+      <input type="text" id="adminUsername" placeholder="Username" required autocomplete="username">
+      <input type="password" id="adminPassword" placeholder="Password" required autocomplete="current-password">
+      <button type="submit">Login</button>
+      <div id="adminLoginMessage"></div>
+    </form>
+  </div>
+  <div class="admin-panel-container" id="adminPanel">
+    <div class="admin-panel-title">Shared Answers Admin Panel</div>
+    <div class="admin-section">
+      <h3>Upload File</h3>
+      <form id="fileUploadForm">
+        <label for="fileClass">Class:</label>
+        <select id="fileClass" required>
+          <option value="">Select Class</option>
+          <option value="10th">10th</option>
+          <option value="11th">11th</option>
+        </select>
+        <label for="fileInput">File:</label>
+        <input type="file" id="fileInput" required>
+        <button type="submit">Upload</button>
+        <div id="fileUploadMessage"></div>
+      </form>
+    </div>
+    <div class="admin-section">
+      <h3>API Key Management</h3>
+      <form id="apiKeyForm">
+        <label for="apiKeyUser">Username:</label>
+        <input type="text" id="apiKeyUser" placeholder="Username" required>
+        <button type="submit">Generate API Key</button>
+        <div id="apiKeyMessage"></div>
+      </form>
+    </div>
+    <div class="admin-section">
+      <h3>API Key Generator</h3>
+      <div class="api-key-gen-row">
+        <input type="text" id="generatedApiKey" placeholder="API Key will appear here" readonly>
+        <select id="apiKeyClassSelect">
+          <option value="">Select Class</option>
+          <option value="10th">10th</option>
+          <option value="11th">11th</option>
+        </select>
+        <button type="button" id="copyApiKeyBtn">Copy</button>
+        <button type="button" id="clearApiKeyBtn">Clear</button>
+        <button type="button" id="generateApiKeyBtn">Generate</button>
+      </div>
+      <div id="apiKeyGenMessage"></div>
+    </div>
+    <div class="admin-section">
+      <h3>User Manager</h3>
+      <div id="userManager">
+        <ul id="userList"></ul>
+        <div id="userDetails"></div>
+      </div>
+    </div>
+    <div class="admin-section">
+      <h3>Uploaded Files</h3>
+      <div class="admin-files-list" id="adminFilesList">
+        <ul id="filesListUl"></ul>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Simple admin login (client-side only, for demo; use backend auth in production)
+    const adminLoginForm = document.getElementById('adminLoginForm');
+    const adminPanel = document.getElementById('adminPanel');
+    const adminLogin = document.getElementById('adminLogin');
+    adminLoginForm.onsubmit = function(e) {
+      e.preventDefault();
+      const username = document.getElementById('adminUsername').value;
+      const password = document.getElementById('adminPassword').value;
+      if (username === 'Sicokaleb' && password === 'Sico132456') {
+        adminLogin.style.display = 'none';
+        adminPanel.classList.add('active');
+      } else {
+        document.getElementById('adminLoginMessage').textContent = 'Invalid credentials.';
+      }
+    };
+    // --- Admin Panel Logic ---
+    const API_BASE = '/api'; // Adjust if needed for deployment
+    let adminToken = null; // Store JWT after login (future: backend auth)
+
+    // API Key Generator logic
+    const generatedApiKey = document.getElementById('generatedApiKey');
+    const copyApiKeyBtn = document.getElementById('copyApiKeyBtn');
+    const clearApiKeyBtn = document.getElementById('clearApiKeyBtn');
+    const generateApiKeyBtn = document.getElementById('generateApiKeyBtn');
+    const apiKeyGenMessage = document.getElementById('apiKeyGenMessage');
+
+    copyApiKeyBtn.onclick = () => {
+      if (generatedApiKey.value) {
+        navigator.clipboard.writeText(generatedApiKey.value);
+        apiKeyGenMessage.textContent = 'Copied!';
+        setTimeout(() => apiKeyGenMessage.textContent = '', 1200);
+      }
+    };
+    clearApiKeyBtn.onclick = () => {
+      generatedApiKey.value = '';
+      apiKeyGenMessage.textContent = '';
+    };
+    generateApiKeyBtn.onclick = async () => {
+      const username = prompt('Enter username for API key:');
+      const classTag = document.getElementById('apiKeyClassSelect').value;
+      if (!username || !classTag) {
+        apiKeyGenMessage.textContent = 'Username and class must be selected.';
+        return;
+      }
+      try {
+        // In production, use admin JWT for authentication
+        const res = await fetch(`${API_BASE}/auth/admin/generate-key`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, classTag })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          generatedApiKey.value = data.apiKey;
+          apiKeyGenMessage.textContent = 'API key generated!';
+        } else {
+          apiKeyGenMessage.textContent = data.error || 'Error generating API key.';
+        }
+      } catch (err) {
+        apiKeyGenMessage.textContent = 'Network error.';
+      }
+    };
+
+    // --- User Manager logic ---
+    const userList = document.getElementById('userList');
+    const userDetails = document.getElementById('userDetails');
+
+    async function fetchUsers() {
+      // In production, send admin JWT in Authorization header
+      const res = await fetch(`${API_BASE}/users/`, {
+        headers: { /* 'Authorization': `Bearer ${adminToken}` */ }
+      });
+      const users = await res.json();
+      userList.innerHTML = '';
+      users.forEach(user => {
+        const li = document.createElement('li');
+        li.textContent = user.username + (user.roles.includes('admin') ? ' (admin)' : '');
+        li.style.cursor = 'pointer';
+        li.onclick = () => showUserDetails(user);
+        userList.appendChild(li);
+      });
+    }
+
+    function showUserDetails(user) {
+      userDetails.style.display = 'block';
+      userDetails.innerHTML = `
+        <strong>Username:</strong> ${user.username}<br>
+        <strong>Email:</strong> ${user.email}<br>
+        <strong>Roles:</strong> ${user.roles.join(', ')}<br>
+        <strong>API Key:</strong> <input type="text" value="${user.apiKey || ''}" readonly id="detailApiKey" style="width:60%"> <button id="copyDetailApiKey">Copy</button><br>
+        <button id="revokeUserBtn" style="margin-top:1em; background:#ef4444;">Revoke Access</button>
+        <button id="closeUserDetails" style="margin-top:1em; margin-left:1em;">Close</button>
+      `;
+      document.getElementById('copyDetailApiKey').onclick = () => {
+        const keyInput = document.getElementById('detailApiKey');
+        if (keyInput.value) navigator.clipboard.writeText(keyInput.value);
+      };
+      document.getElementById('revokeUserBtn').onclick = async () => {
+        if (confirm('Are you sure you want to revoke this user?')) {
+          const res = await fetch(`${API_BASE}/users/${user._id}`, { method: 'DELETE' });
+          if (res.ok) {
+            userDetails.style.display = 'none';
+            fetchUsers();
+          } else {
+            alert('Failed to revoke user.');
+          }
+        }
+      };
+      document.getElementById('closeUserDetails').onclick = () => {
+        userDetails.style.display = 'none';
+      };
+    }
+
+    // Fetch users on admin panel open
+    adminPanel.addEventListener('transitionend', () => {
+      if (adminPanel.classList.contains('active')) fetchUsers();
+    });
+  </script>
+</body>
+</html>

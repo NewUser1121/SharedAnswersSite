@@ -4,6 +4,8 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const ApiKey = require('../models/ApiKey');
 const crypto = require('crypto');
+const admin = require('../middleware/admin');
+const auth = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -50,6 +52,29 @@ router.post('/generate-key', async (req, res) => {
       apiKey = new ApiKey({ key, user: user._id, classAccess: user.classAccess });
       await apiKey.save();
       user.apiKey = key;
+      await user.save();
+    }
+    res.json({ apiKey: apiKey.key });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// Admin: Generate API key for a user for a specific class
+router.post('/admin/generate-key', auth, admin, async (req, res) => {
+  try {
+    const { username, classTag } = req.body;
+    if (!username || !classTag) return res.status(400).json({ error: 'Username and classTag required' });
+    const user = await User.findOne({ username });
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    // Only allow one key per user per class
+    let apiKey = await ApiKey.findOne({ user: user._id, classAccess: [classTag] });
+    if (!apiKey) {
+      const key = crypto.randomBytes(24).toString('hex');
+      apiKey = new ApiKey({ key, user: user._id, classAccess: [classTag] });
+      await apiKey.save();
+      user.apiKey = key;
+      user.classAccess = [classTag];
       await user.save();
     }
     res.json({ apiKey: apiKey.key });
