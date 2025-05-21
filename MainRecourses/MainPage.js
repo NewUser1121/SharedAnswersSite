@@ -24,18 +24,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const apiStatus = document.getElementById('apiStatus');
     const accessibleGrades = document.getElementById('accessibleGrades');
 
-    // Helper function to lock/unlock body scroll
-    const toggleBodyScroll = (lock) => {
-        if (lock) {
-            const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-            document.body.style.overflow = 'hidden';
-            document.body.style.paddingRight = scrollbarWidth + 'px';
-        } else {
-            document.body.style.overflow = '';
-            document.body.style.paddingRight = '';
-        }
-    };
-
     // Initialize modals
     [authModal, registerModal].forEach(modal => {
         if (modal) modal.classList.remove('active');
@@ -55,7 +43,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (loginSection) loginSection.style.display = 'block';
                 if (accountSection) accountSection.classList.remove('active');
                 if (gradeSelectorSection) gradeSelectorSection.classList.remove('active');
-                toggleBodyScroll(true);
+                document.body.style.overflow = 'hidden';
             }
         });
     }
@@ -66,7 +54,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             e.preventDefault();
             if (registerModal) {
                 registerModal.classList.add('active');
-                toggleBodyScroll(true);
+                document.body.style.overflow = 'hidden';
             }
         });
     }
@@ -76,7 +64,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         closeModalBtn.addEventListener('click', () => {
             if (authModal) {
                 authModal.classList.remove('active');
-                toggleBodyScroll(false);
+                document.body.style.overflow = '';
                 setTimeout(() => {
                     if (loginSection) loginSection.style.display = 'block';
                     if (accountSection) accountSection.classList.remove('active');
@@ -91,7 +79,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         closeRegisterModalBtn.addEventListener('click', () => {
             if (registerModal) {
                 registerModal.classList.remove('active');
-                toggleBodyScroll(false);
+                document.body.style.overflow = '';
             }
         });
     }
@@ -100,7 +88,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.addEventListener('click', (e) => {
         if (e.target === authModal) {
             authModal.classList.remove('active');
-            toggleBodyScroll(false);
+            document.body.style.overflow = '';
             setTimeout(() => {
                 if (loginSection) loginSection.style.display = 'block';
                 if (accountSection) accountSection.classList.remove('active');
@@ -109,7 +97,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         if (e.target === registerModal) {
             registerModal.classList.remove('active');
-            toggleBodyScroll(false);
+            document.body.style.overflow = '';
         }
     });
 
@@ -186,7 +174,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             setTimeout(() => {
                 if (registerModal) registerModal.classList.remove('active');
-                toggleBodyScroll(false);
                 if (registerForm) registerForm.reset();
                 if (authModal) authModal.classList.add('active');
             }, 1500);
@@ -283,4 +270,69 @@ document.addEventListener('DOMContentLoaded', async () => {
         .forEach(element => {
             element.style.transition = 'all 0.3s ease';
         });
+});
+
+// Bubble generator for main page
+window.addEventListener('DOMContentLoaded', () => {
+    const bubbleContainer = document.getElementById('bubble-container');
+    if (!bubbleContainer) return;
+    const colors = [
+        'rgba(79,140,255,0.18)',
+        'rgba(162,89,255,0.16)',
+        'rgba(255, 99, 132, 0.13)',
+        'rgba(255, 205, 86, 0.13)',
+        'rgba(54, 162, 235, 0.13)',
+        'rgba(153, 102, 255, 0.13)'
+    ];
+    function createBubble() {
+        const bubble = document.createElement('div');
+        const size = Math.random() * 60 + 40;
+        bubble.className = 'bubble';
+        bubble.style.width = `${size}px`;
+        bubble.style.height = `${size}px`;
+        bubble.style.left = `${Math.random() * 100}%`;
+        bubble.style.bottom = `-${size}px`;
+        bubble.style.background = colors[Math.floor(Math.random() * colors.length)];
+        bubble.style.opacity = Math.random() * 0.5 + 0.2;
+        bubble.style.position = 'absolute';
+        bubble.style.borderRadius = '50%';
+        bubble.style.zIndex = 0;
+        bubble.style.pointerEvents = 'none';
+        bubble.style.filter = 'blur(1.5px)';
+        bubble.style.animation = `bubbleFloat ${Math.random() * 8 + 10}s linear forwards`;
+        bubbleContainer.appendChild(bubble);
+        bubble.addEventListener('animationend', () => bubble.remove());
+    }
+    setInterval(createBubble, 900);
+});
+
+// Modal logic (class toggling, fade in/out)
+function showModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (!modal) return;
+    modal.classList.add('show');
+    modal.style.display = 'flex';
+    setTimeout(() => { modal.style.opacity = 1; }, 10);
+}
+function hideModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (!modal) return;
+    modal.style.opacity = 0;
+    setTimeout(() => {
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+    }, 350);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('showLoginBtn')?.addEventListener('click', () => showModal('authModal'));
+    document.getElementById('showRegisterBtn')?.addEventListener('click', () => showModal('registerModal'));
+    document.getElementById('closeModal')?.addEventListener('click', () => hideModal('authModal'));
+    document.getElementById('closeRegisterModal')?.addEventListener('click', () => hideModal('registerModal'));
+    // Hide modals on outside click
+    window.addEventListener('click', (e) => {
+        if (e.target.classList.contains('modal')) {
+            hideModal(e.target.id);
+        }
+    });
 });

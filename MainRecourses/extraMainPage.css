@@ -1,28 +1,22 @@
 /* Extra modern effects for MainPage.html */
-body {
-    margin: 0;
-    min-height: 100vh;
-    overflow-x: hidden;
-}
-
 .main-bg {
     min-height: 100vh;
-    width: 100%;
-    position: relative;
     background: 
-        linear-gradient(to right, rgba(15, 23, 42, 0.01), rgba(15, 23, 42, 0.02)),
-        linear-gradient(120deg, #fafbff 0%, #f8faff 100%);
+        linear-gradient(120deg, #667eea 0%, #764ba2 100%); /* Bluish to purpleish fade */
     background-attachment: fixed;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-    overflow-x: hidden;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
 }
 
 /* Professional geometric patterns */
 .main-bg::before {
     content: '';
-    position: fixed;
+    position: absolute;
     width: 200%;
     height: 200%;
     top: -50%;
@@ -31,9 +25,10 @@ body {
         linear-gradient(rgba(99, 102, 241, 0.02) 2px, transparent 2px),
         linear-gradient(90deg, rgba(99, 102, 241, 0.02) 2px, transparent 2px);
     background-size: 60px 60px;
-    animation: backgroundMove 60s linear infinite;
-    opacity: 0.5;
-    z-index: 0;
+    opacity: 1 !important;
+    animation: none !important;
+    transition: none !important;
+    z-index: 0 !important;
     pointer-events: none;
 }
 
@@ -49,7 +44,7 @@ body {
 /* Floating orbs effect */
 .main-bg::after {
     content: '';
-    position: fixed;
+    position: absolute;
     width: 100%;
     height: 100%;
     top: 0;
@@ -57,8 +52,12 @@ body {
     background: 
         radial-gradient(circle at 10% 90%, rgba(99, 102, 241, 0.03) 0%, transparent 40%),
         radial-gradient(circle at 90% 10%, rgba(99, 102, 241, 0.03) 0%, transparent 40%);
+    filter: blur(80px);
+    opacity: 1 !important;
+    animation: none !important;
+    transition: none !important;
+    z-index: 0 !important;
     pointer-events: none;
-    z-index: 0;
 }
 
 /* Background animation */
@@ -72,9 +71,11 @@ body {
     background: 
         radial-gradient(circle at 100% 100%, rgba(102,126,234,0.08) 0%, transparent 60%),
         radial-gradient(circle at 0% 100%, rgba(118,75,162,0.08) 0%, transparent 60%);
-    opacity: 0.7;
-    animation: bgFloat 20s ease-in-out infinite alternate;
+    opacity: 1 !important;
+    animation: none !important;
+    transition: none !important;
     pointer-events: none;
+    z-index: 0 !important;
 }
 
 @keyframes bgFloat {
@@ -85,6 +86,33 @@ body {
         transform: translateY(-2%) scale(1.02);
     }
 }
+
+@keyframes bubbleFloat {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 0.7;
+    }
+    100% {
+        transform: translateY(-120vh) scale(1.2);
+        opacity: 0.1;
+    }
+}
+
+.bubble {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.5;
+    filter: blur(2px);
+    pointer-events: none;
+    z-index: 1;
+    animation: bubbleFloat linear infinite;
+}
+
+/* Example bubble colors */
+.bubble-blue { background: radial-gradient(circle, #7f9cf5 60%, #667eea 100%); }
+.bubble-purple { background: radial-gradient(circle, #a18cd1 60%, #764ba2 100%); }
+.bubble-pink { background: radial-gradient(circle, #fbc2eb 60%, #a18cd1 100%); }
+.bubble-cyan { background: radial-gradient(circle, #89f7fe 60%, #66a6ff 100%); }
 
 .glass {
     background: rgba(255, 255, 255, 0.95);
@@ -132,16 +160,837 @@ body {
 }
 
 .footer {
-    position: relative;
-    z-index: 1;
-    padding: 20px;
+    margin-top: 32px;
+    color: #64748b;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
     text-align: center;
-    color: var(--text-secondary);
-    margin-top: auto;
+    width: 100vw;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding-bottom: 18px;
 }
 
-/* Ensure content is above background */
-.main-bg > * {
+.contact-container {
+    position: relative !important;
+    z-index: 10000 !important;
+    background: rgba(255,255,255,0.98);
+}
+
+/* Floating Bubbles Background */
+.bubbles-bg {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+.bubble {
+    position: absolute;
+    bottom: -120px;
+    border-radius: 50%;
+    opacity: 0.25;
+    background: linear-gradient(135deg, #aee1f9 0%, #f7c8ff 100%);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    animation: floatUp 12s linear infinite;
+    will-change: transform, opacity;
+    filter: blur(0.5px);
+}
+@keyframes floatUp {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 0.25;
+    }
+    10% {
+        opacity: 0.35;
+    }
+    80% {
+        opacity: 0.4;
+    }
+    100% {
+        transform: translateY(-110vh) scale(1.1);
+        opacity: 0.1;
+    }
+}
+
+/* Stylize site title and subtitle */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Inter:wght@700;500&display=swap');
+
+.site-title {
+    font-family: 'Montserrat', 'Inter', 'Segoe UI', Arial, sans-serif;
+    font-size: 3.7rem;
+    font-weight: 900;
+    letter-spacing: 2.5px;
+    background: linear-gradient(90deg, #6dd5ed 0%, #f7797d 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 16px #6dd5ed88) drop-shadow(0 0 32px #f7797d55);
+    text-shadow: 0 0 18px #fff8, 0 2px 8px #6dd5ed55, 0 0 32px #f7797d33;
+    transition: transform 0.2s cubic-bezier(.4,2,.6,1), text-shadow 0.2s;
+}
+.site-title:hover {
+    transform: scale(1.045) rotate(-1deg);
+    text-shadow: 0 0 32px #fff, 0 4px 24px #6dd5ed88, 0 0 48px #f7797d55;
+}
+.site-subtitle {
+    font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #444;
+    letter-spacing: 1px;
+    margin-top: 0.5rem;
+    margin-bottom: 2rem;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    background: linear-gradient(90deg, #43cea2 0%, #185a9d 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Make site title look clickable for admin panel link */
+#siteTitleClickable {
+    cursor: pointer;
+}
+
+/* Button Styles - Unify CTA buttons */
+.cta-buttons .primary-btn,
+.cta-buttons .secondary-btn,
+.cta-buttons .contact-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    background: linear-gradient(90deg, #43cea2 0%, #185a9d 100%);
+    color: #fff;
+    border: none;
+    border-radius: 2em;
+    padding: 0.85em 2.2em;
+    font-size: 1.15rem;
+    font-weight: 700;
+    box-shadow: 0 4px 24px rgba(67,206,162,0.12);
+    cursor: pointer;
+    margin: 0 0.5em 0.5em 0;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    outline: none;
+    text-decoration: none;
+}
+.cta-buttons .primary-btn:hover,
+.cta-buttons .secondary-btn:hover,
+.cta-buttons .contact-btn:hover {
+    background: linear-gradient(90deg, #185a9d 0%, #43cea2 100%);
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 8px 32px rgba(24,90,157,0.18);
+}
+
+/* Responsive tweaks for title */
+@media (max-width: 600px) {
+    .site-title {
+        font-size: 2.2rem;
+    }
+    .site-subtitle {
+        font-size: 1.1rem;
+    }
+}
+
+/* --- Auth Modal Form Alignment --- */
+.login-section, .register-form-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#loginForm, #registerForm {
+    width: 100%;
+    max-width: 340px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1em;
+    align-items: center;
+}
+/* --- Auth Modal: Modern Input with Icon Inside --- */
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 0.7em;
+    width: 100%;
+    background: #fff;
+    border-radius: 1.5em;
+    box-shadow: 0 2px 12px rgba(67,206,162,0.08);
+    padding: 0.5em 1.1em;
+    margin-bottom: 0.2em;
+    transition: box-shadow 0.2s;
     position: relative;
-    z-index: 1;
+}
+.input-group i {
+    font-size: 1.2em;
+    color: #43cea2;
+    min-width: 1.5em;
+    text-align: center;
+    position: relative;
+    left: 0;
+    top: 0;
+    transform: none;
+    pointer-events: none;
+    align-self: center;
+}
+.input-group input {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 1.08em;
+    width: 100%;
+    padding: 0.5em 0;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    color: #222;
+    margin-left: 0;
+}
+.input-group input::placeholder {
+    color: #aaa;
+    font-weight: 500;
+}
+.input-group .input-icon {
+    color: #185a9d;
+    min-width: 1.5em;
+    align-self: center;
+}
+
+/* Fix for icon overlap on confirm password */
+.input-group .input-icon {
+    min-width: 1.5em;
+    color: #185a9d;
+}
+
+/* Center modal content vertically */
+.container.glass, .container.glass.register-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    min-height: 70vh;
+}
+.login-section, .register-form-section {
+    min-width: 340px;
+}
+
+@media (max-width: 900px) {
+    .container.glass, .container.glass.register-container {
+        flex-direction: column;
+        min-height: unset;
+    }
+}
+
+/* --- Contact Modal Always Visible --- */
+.contact-btn {
+    /* Remove fade-in or modal styles if any */
+}
+
+/* Hide modal fade-in for contact, if any */
+#contactModal, .contact-modal {
+    display: none !important;
+}
+
+/* Modal always on top of background, even when fading in */
+.modal {
+    z-index: 1002 !important;
+}
+
+/* No changes to contact modal fade-in, just ensure z-index is high */
+#registerModal, #authModal {
+    z-index: 1002 !important;
+}
+
+/* Responsive tweaks for modal */
+@media (max-width: 600px) {
+    .container.glass, .container.glass.register-container {
+        min-width: 90vw;
+        padding: 1em 0.5em;
+    }
+    .login-section, .register-form-section {
+        min-width: unset;
+    }
+}
+
+/* --- Contact Menu: Always Static, No Fade, Always On Top --- */
+.register-info-section {
+    opacity: unset !important;
+    visibility: unset !important;
+    transition: unset !important;
+    z-index: unset !important;
+    position: unset !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 350px;
+    min-width: 220px;
+    background: rgba(255,255,255,0.85);
+    border-radius: 1.5em;
+    box-shadow: 0 2px 12px rgba(67,206,162,0.08);
+    margin: 0 auto;
+    padding: 1.5em 1.2em;
+}
+.help-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.7em;
+}
+.contact-preview {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    margin-top: 0.7em;
+}
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 0.7em;
+    font-size: 1.08em;
+}
+.snapcode-preview {
+    width: 120px;
+    height: 120px;
+    border-radius: 1em;
+    margin: 0.5em 0;
+    box-shadow: 0 2px 12px rgba(67,206,162,0.08);
+}
+
+/* --- Register Modal Responsive Layout Fix --- */
+.container.glass.register-container {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: center;
+    min-height: 70vh;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2em 1em;
+    gap: 2em;
+}
+.register-form-section, .register-info-section {
+    flex: 1 1 0;
+    min-width: 260px;
+    max-width: 350px;
+}
+@media (max-width: 900px) {
+    .container.glass.register-container {
+        flex-direction: column;
+        min-width: unset;
+        max-width: 98vw;
+        padding: 1em 0.5em;
+        gap: 1em;
+    }
+    .register-form-section, .register-info-section {
+        max-width: unset;
+        min-width: unset;
+        width: 100%;
+    }
+}
+
+/* Contact Modal Styles */
+#contactModal.modal {
+    display: none;
+    position: fixed;
+    z-index: 1002;
+    left: 0; top: 0; right: 0; bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    background: rgba(30, 41, 59, 0.25);
+    transition: background 0.2s;
+}
+#contactModal.active {
+    display: flex;
+    background: rgba(30, 41, 59, 0.35);
+}
+#contactModal .contact-container {
+    max-width: 800px;
+    width: 98vw;
+    margin: 0 auto;
+    box-shadow: 0 8px 32px rgba(31,38,135,0.18);
+    animation: modalFadeIn 0.2s;
+}
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: translateY(40px) scale(0.98); }
+    to { opacity: 1; transform: none; }
+}
+#closeContactModal.close-btn {
+    position: absolute;
+    top: 18px;
+    right: 28px;
+    font-size: 2.2rem;
+    color: #667eea;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    transition: color 0.2s;
+}
+#closeContactModal.close-btn:hover {
+    color: #f7797d;
+}
+@media (max-width: 900px) {
+    #contactModal .contact-container {
+        max-width: 98vw;
+        padding: 1em 0.5em;
+    }
+}
+
+/* Redesigned Contact Modal Styles */
+.contact-modal-container {
+    max-width: 1100px;
+    min-width: 700px;
+    width: 80vw;
+    background: rgba(255,255,255,0.99);
+    border-radius: 2.5em;
+    box-shadow: 0 24px 80px rgba(31,38,135,0.22), 0 2px 16px rgba(67,206,162,0.10);
+    padding: 2.5em 2.5em 2em 2.5em;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2em;
+    justify-content: center;
+    transition: box-shadow 0.2s, padding 0.2s, max-width 0.2s;
+    overflow: visible;
+}
+.contact-modal-header {
+    text-align: center;
+    margin-bottom: 0.7em;
+}
+.contact-modal-header h2 {
+    font-size: 2.7rem;
+    font-weight: 900;
+    margin-bottom: 0.2em;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.contact-modal-header p {
+    color: #4b5563;
+    font-size: 1.22rem;
+    margin-bottom: 0;
+}
+.contact-modal-grid {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 2em;
+    justify-content: center;
+    align-items: stretch;
+    width: 100%;
+    margin-bottom: 0.5em;
+}
+.contact-modal-card {
+    background: rgba(102,126,234,0.10);
+    border-radius: 1.5em;
+    padding: 1.5em 1.5em;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    min-width: 260px;
+    max-width: 320px;
+    flex: 1 1 300px;
+    box-shadow: 0 4px 18px rgba(102,126,234,0.10);
+    transition: box-shadow 0.2s, background 0.2s;
+    font-size: 1.08em;
+    word-break: break-word;
+}
+.contact-modal-card i {
+    font-size: 2.2em;
+    color: #667eea;
+    margin-bottom: 0.7em;
+    min-width: 2.2em;
+    text-align: center;
+}
+.contact-modal-card h3 {
+    font-size: 1.18em;
+    font-weight: 700;
+    margin: 0 0 0.3em 0;
+    color: #222;
+}
+.contact-modal-detail {
+    font-size: 1.08em;
+    color: #222;
+    font-weight: 500;
+    word-break: break-all;
+    display: inline;
+    line-height: 1.4;
+}
+.copy-btn {
+    background: #667eea;
+    color: #fff;
+    border: none;
+    border-radius: 0.7em;
+    padding: 0.2em 0.9em;
+    font-size: 0.95em;
+    font-weight: 600;
+    margin-left: 0.5em;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.copy-btn:hover {
+    background: #764ba2;
+}
+.contact-modal-snapcode {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5em;
+    margin-top: 1.2em;
+}
+.contact-modal-snapcode .snapcode-img {
+    width: 110px;
+    height: 110px;
+    border-radius: 1em;
+    box-shadow: 0 2px 12px rgba(67,206,162,0.08);
+}
+.contact-modal-snapcode div {
+    font-size: 1em;
+    color: #4b5563;
+    margin-top: 0.2em;
+}
+@media (max-width: 1100px) {
+    .contact-modal-container {
+        min-width: 98vw;
+        max-width: 99vw;
+        width: 99vw;
+        padding: 1.2em 0.5em 1.2em 0.5em;
+    }
+    .contact-modal-grid {
+        flex-wrap: wrap;
+        gap: 1em;
+    }
+    .contact-modal-card {
+        min-width: 220px;
+        max-width: 100%;
+        width: 100%;
+        padding: 1.2em 0.7em;
+    }
+}
+@media (max-width: 900px) {
+    .contact-modal-container {
+        min-width: unset;
+        padding: 0.7em 0.1em 1.2em 0.1em;
+    }
+    .contact-modal-grid {
+        flex-direction: column;
+        gap: 0.7em;
+    }
+    .contact-modal-card {
+        min-width: unset;
+        max-width: unset;
+        width: 100%;
+        padding: 1em 0.7em;
+    }
+}
+@media (max-width: 600px) {
+    .contact-modal-container {
+        min-width: unset;
+        padding: 0.7em 0.1em 1.2em 0.1em;
+        min-height: unset;
+    }
+    .contact-modal-grid {
+        flex-direction: column;
+        gap: 0.7em;
+    }
+    .contact-modal-card {
+        min-width: unset;
+        width: 100%;
+        padding: 1em 0.7em;
+    }
+    .contact-modal-snapcode .snapcode-img {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+/* Register Email Link Styling */
+.register-email-link {
+    color: #667eea;
+    font-weight: 600;
+    text-decoration: underline;
+    word-break: break-all;
+    transition: color 0.2s;
+}
+.register-email-link:hover {
+    color: #764ba2;
+}
+
+/* --- Enhanced Register Modal --- */
+.container.glass.register-container {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: center;
+    min-height: 540px;
+    max-width: 950px;
+    margin: 0 auto;
+    padding: 2.5em 2em;
+    gap: 2.5em;
+    background: rgba(255,255,255,0.98);
+    box-shadow: 0 12px 48px rgba(31,38,135,0.13), 0 1.5px 8px rgba(67,206,162,0.08);
+    border-radius: 2em;
+}
+.register-form-section {
+    flex: 1 1 0;
+    min-width: 320px;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2em 1.5em 2em 1.5em;
+    background: rgba(255,255,255,0.98);
+    border-radius: 1.5em;
+    box-shadow: 0 2px 12px rgba(67,206,162,0.06);
+}
+.register-form-section h2 {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: #6c63ff;
+    margin-bottom: 0.3em;
+    letter-spacing: 1px;
+    background: linear-gradient(90deg, #6c63ff 0%, #43cea2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.register-form-section .register-subtitle {
+    font-size: 1.1rem;
+    color: #444;
+    margin-bottom: 1.5em;
+    font-weight: 500;
+}
+#registerForm {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2em;
+    align-items: stretch;
+}
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 0.7em;
+    width: 100%;
+    background: #f7f8fa;
+    border-radius: 1.5em;
+    box-shadow: 0 2px 12px rgba(67,206,162,0.08);
+    padding: 0.7em 1.2em;
+    margin-bottom: 0.2em;
+    border: 1.5px solid #e0e7ef;
+    transition: box-shadow 0.2s, border 0.2s;
+    position: relative;
+}
+.input-group:focus-within {
+    box-shadow: 0 4px 18px #6c63ff22;
+    border: 1.5px solid #6c63ff;
+}
+.input-group i {
+    font-size: 1.25em;
+    color: #43cea2;
+    min-width: 1.5em;
+    text-align: center;
+    position: relative;
+    left: 0;
+    top: 0;
+    pointer-events: none;
+    align-self: center;
+}
+.input-group input {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 1.12em;
+    width: 100%;
+    padding: 0.5em 0;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    color: #222;
+    margin-left: 0;
+    font-weight: 500;
+}
+.input-group input::placeholder {
+    color: #aaa;
+    font-weight: 500;
+    opacity: 1;
+}
+.primary-btn {
+    margin-top: 1.2em;
+    font-size: 1.15em;
+    padding: 0.9em 2.2em;
+    border-radius: 2em;
+    background: linear-gradient(90deg, #6c63ff 0%, #43cea2 100%);
+    color: #fff;
+    font-weight: 700;
+    box-shadow: 0 4px 24px rgba(67,206,162,0.12);
+    border: none;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+.primary-btn:hover {
+    background: linear-gradient(90deg, #43cea2 0%, #6c63ff 100%);
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 8px 32px rgba(24,90,157,0.18);
+}
+#registerMessage {
+    margin-top: 0.7em;
+    min-height: 1.2em;
+    font-size: 1.05em;
+    font-weight: 600;
+    color: #ef4444;
+    text-align: left;
+}
+/* Info section */
+.register-info-section {
+    flex: 1 1 0;
+    min-width: 260px;
+    max-width: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(245,247,250,0.98);
+    border-radius: 1.5em;
+    box-shadow: 0 2px 12px rgba(67,206,162,0.06);
+    padding: 2em 1.2em;
+    margin: 0 auto;
+}
+.help-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.1em;
+}
+.help-container h3 {
+    font-size: 1.18em;
+    font-weight: 800;
+    margin-bottom: 0.2em;
+    color: #222;
+}
+.help-text {
+    color: #444;
+    font-size: 1em;
+    margin-bottom: 0.5em;
+    text-align: center;
+}
+.contact-preview {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7em;
+    margin-top: 0.7em;
+}
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 0.7em;
+    font-size: 1.08em;
+    color: #222;
+}
+.contact-item i {
+    font-size: 1.2em;
+    color: #6c63ff;
+}
+.register-email-link {
+    color: #6c63ff;
+    font-weight: 600;
+    text-decoration: underline;
+    word-break: break-all;
+    transition: color 0.2s;
+}
+.register-email-link:hover {
+    color: #43cea2;
+}
+@media (max-width: 900px) {
+    .container.glass.register-container {
+        flex-direction: column;
+        min-width: unset;
+        max-width: 98vw;
+        padding: 1.2em 0.5em;
+        gap: 1.2em;
+    }
+    .register-form-section, .register-info-section {
+        max-width: unset;
+        min-width: unset;
+        width: 100%;
+        padding: 1.2em 0.7em;
+    }
+}
+
+/* Google Drive Links Section */
+.drive-links-section {
+  margin: 2.5em auto;
+  max-width: 900px;
+}
+.drive-links-title {
+  font-size: 2.1rem;
+  font-weight: 900;
+  text-align: center;
+  background: linear-gradient(90deg,#43cea2 0%,#6c63ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1.2em;
+}
+.drive-links-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5em;
+  justify-content: center;
+}
+.drive-link-card {
+  background: #f7f8fa;
+  border-radius: 1.2em;
+  box-shadow: 0 2px 12px #6c63ff11;
+  padding: 1.2em 2em;
+  min-width: 220px;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: box-shadow 0.2s, transform 0.2s;
+  text-decoration: none;
+  color: #222;
+  font-weight: 600;
+}
+.drive-link-card:hover {
+  box-shadow: 0 6px 24px #43cea233;
+  transform: translateY(-4px) scale(1.03);
+}
+.drive-link-card .fa-file-alt {
+  font-size: 1.5em;
+  color: #6c63ff;
+  margin-bottom: 0.5em;
+}
+.drive-link-card .fa-folder-open {
+  font-size: 1.5em;
+  color: #43cea2;
+  margin-bottom: 0.5em;
+}
+.drive-link-card.folder-link {
+  background: #e0f7fa;
+  color: #222;
+  font-weight: 700;
+}
+@media (max-width: 700px) {
+  .drive-links-section {
+    max-width: 99vw;
+    padding: 0 0.5em;
+  }
+  .drive-link-card {
+    min-width: 90vw;
+    max-width: 99vw;
+    padding: 1em 0.7em;
+  }
 }

@@ -1,0 +1,16 @@
+# Render.com deployment configuration for Node.js API
+# Place this in the root of your Render API project as render.yaml
+
+services:
+  - type: web
+    name: shared-answers-api
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node app.js
+    envVars:
+      - key: MONGODB_URI
+        sync: false # Set in Render dashboard for security
+      - key: JWT_SECRET
+        sync: false # Set in Render dashboard for security
+    autoDeploy: true

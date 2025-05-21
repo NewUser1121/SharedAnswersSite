@@ -10,10 +10,12 @@
 </head>
 <body>
     <div class="main-bg">
+        <!-- Floating Bubbles Background -->
+        <div class="bubbles-bg" aria-hidden="true"></div>
         <!-- Landing Section -->
         <div class="landing-section">
             <div class="header">
-                <h1 class="site-title">Shared Answers</h1>
+                <h1 class="site-title" id="siteTitleClickable" style="cursor:pointer;">Shared Answers</h1>
                 <p class="site-subtitle">Your Gateway to Academic Excellence</p>
             </div>
             
@@ -39,12 +41,12 @@
                 <button id="showLoginBtn" class="primary-btn">
                     <i class="fas fa-sign-in-alt"></i> Sign In
                 </button>
-                <button id="showRegisterBtn" class="secondary-btn">
+                <button id="showRegisterBtn" class="primary-btn">
                     <i class="fas fa-user-plus"></i> Create Account
                 </button>
-                <a href="contact.html" class="contact-btn">
-                    <i class="fas fa-envelope"></i> Contact Us
-                </a>
+                <button id="contactMeBtn" class="primary-btn contact-btn" type="button">
+                    <i class="fas fa-envelope"></i> Contact Me
+                </button>
             </div>
         </div>
 
@@ -124,19 +126,19 @@
                     <div class="help-container">
                         <h3>Need Help?</h3>
                         <p class="help-text">Contact me directly through any of these platforms:</p>
-                        <img src="MainRecourses/snapcode.jpg" alt="My Snapcode" class="snapcode-preview">
+                        <!-- Snapcode image removed from here -->
                         <div class="contact-preview">
                             <div class="contact-item">
                                 <i class="fab fa-discord"></i>
-                                <p><strong>Discord:</strong> kaleb6768</p>
+                                <span><strong>Discord:</strong> kaleb6768</span>
                             </div>
                             <div class="contact-item">
                                 <i class="fab fa-snapchat-ghost"></i>
-                                <p><strong>Snapchat:</strong> kalebridgeway</p>
+                                <span><strong>Snapchat:</strong> kalebridgeway</span>
                             </div>
                             <div class="contact-item">
                                 <i class="fas fa-envelope"></i>
-                                <p><strong>Email:</strong> KalebRidgeway0@gmail.com</p>
+                                <span><strong>Email:</strong> <a href="mailto:KalebRidgeway0@gmail.com" class="register-email-link">KalebRidgeway0@gmail.com</a></span>
                             </div>
                         </div>
                     </div>
@@ -146,10 +148,176 @@
             </div>
         </div>
 
+        <!-- Contact Modal (Remade) -->
+        <div id="contactModal" class="modal">
+            <div class="container glass contact-modal-container">
+                <button id="closeContactModal" class="close-btn" aria-label="Close">&times;</button>
+                <div class="contact-modal-header">
+                    <h2>Contact Support</h2>
+                    <p>We're here to help! Reach out through any of the following methods:</p>
+                </div>
+                <div class="contact-modal-grid">
+                    <div class="contact-modal-card">
+                        <i class="fab fa-discord"></i>
+                        <div>
+                            <h3>Discord</h3>
+                            <p class="contact-modal-detail">kaleb6768 <button class="copy-btn" onclick="navigator.clipboard.writeText('kaleb6768');this.innerText='Copied!';setTimeout(()=>this.innerText='Copy',1200);">Copy</button></p>
+                        </div>
+                    </div>
+                    <div class="contact-modal-card">
+                        <i class="fab fa-snapchat-ghost"></i>
+                        <div>
+                            <h3>Snapchat</h3>
+                            <a class="contact-modal-detail" href="https://www.snapchat.com/add/kalebridgeway" target="_blank" rel="noopener">@kalebridgeway</a>
+                        </div>
+                    </div>
+                    <div class="contact-modal-card">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h3>Email</h3>
+                            <a class="contact-modal-detail" href="mailto:KalebRidgeway0@gmail.com">KalebRidgeway0@gmail.com</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-modal-snapcode">
+                    <img src="MainRecourses/snapcode.jpg" alt="My Snapcode" class="snapcode-img">
+                    <div>Scan to add on Snapchat</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Me Modal -->
+        <div id="contactMeModal" class="modal">
+            <div class="container glass contact-modal-container">
+                <button id="closeContactMeModal" class="close-btn" aria-label="Close">&times;</button>
+                <div class="contact-modal-header">
+                    <h2>Contact Me</h2>
+                    <p>Reach out through any of these platforms:</p>
+                </div>
+                <div class="contact-modal-grid">
+                    <div class="contact-modal-card">
+                        <i class="fab fa-discord"></i>
+                        <div>
+                            <h3>Discord</h3>
+                            <p class="contact-modal-detail">kaleb6768 <button class="copy-btn" onclick="navigator.clipboard.writeText('kaleb6768');this.innerText='Copied!';setTimeout(()=>this.innerText='Copy',1200);">Copy</button></p>
+                        </div>
+                    </div>
+                    <div class="contact-modal-card">
+                        <i class="fab fa-snapchat-ghost"></i>
+                        <div>
+                            <h3>Snapchat</h3>
+                            <a class="contact-modal-detail" href="https://www.snapchat.com/add/kalebridgeway" target="_blank" rel="noopener">@kalebridgeway</a>
+                        </div>
+                    </div>
+                    <div class="contact-modal-card">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h3>Email</h3>
+                            <a class="contact-modal-detail" href="mailto:KalebRidgeway0@gmail.com">KalebRidgeway0@gmail.com</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-modal-snapcode">
+                    <img src="MainRecourses/snapcode.jpg" alt="My Snapcode" class="snapcode-img">
+                    <div>Scan to add on Snapchat</div>
+                </div>
+            </div>
+        </div>
+
         <footer class="footer">Shared Answers &copy; 2025</footer>
     </div>
     <script src="https://kit.fontawesome.com/c4254e24a8.js" crossorigin="anonymous"></script>
     <script src="MainRecourses/userAuth.js"></script>
     <script src="MainRecourses/MainPage.js"></script>
+    <script>
+    // Floating bubbles animation
+    function randomBetween(a, b) { return a + Math.random() * (b - a); }
+    function createBubble() {
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        const size = randomBetween(32, 120);
+        bubble.style.width = `${size}px`;
+        bubble.style.height = `${size}px`;
+        bubble.style.left = `${randomBetween(0, 100)}vw`;
+        bubble.style.animationDuration = `${randomBetween(8, 18)}s`;
+        bubble.style.opacity = randomBetween(0.12, 0.28);
+        bubble.style.filter = `blur(${randomBetween(0, 2)}px)`;
+        document.querySelector('.bubbles-bg').appendChild(bubble);
+        setTimeout(() => bubble.remove(), 18000);
+    }
+    function spawnBubbles() {
+        for (let i = 0; i < 16; i++) setTimeout(createBubble, i * 600);
+        setInterval(createBubble, 1200);
+    }
+    window.addEventListener('DOMContentLoaded', spawnBubbles);
+
+    // Contact Modal logic (remade)
+    document.addEventListener('DOMContentLoaded', function() {
+        var showContactBtn = document.getElementById('showContactBtn');
+        var contactModal = document.getElementById('contactModal');
+        var closeContactModal = document.getElementById('closeContactModal');
+        if (showContactBtn && contactModal && closeContactModal) {
+            showContactBtn.onclick = function(e) {
+                e.preventDefault();
+                contactModal.style.display = 'flex';
+                setTimeout(function() {
+                    contactModal.classList.add('active');
+                }, 10);
+            };
+            closeContactModal.onclick = function() {
+                contactModal.classList.remove('active');
+                setTimeout(function() {
+                    contactModal.style.display = 'none';
+                }, 200);
+            };
+            contactModal.onclick = function(e) {
+                if (e.target === contactModal) {
+                    contactModal.classList.remove('active');
+                    setTimeout(function() {
+                        contactModal.style.display = 'none';
+                    }, 200);
+                }
+            };
+        }
+    });
+
+    // Make site title clickable for admin panel redirect
+    const siteTitle = document.getElementById('siteTitleClickable');
+    if(siteTitle) {
+        siteTitle.addEventListener('click', () => {
+            window.location.href = 'adminpanel.html';
+        });
+    }
+
+    // Contact Me Modal logic
+    document.addEventListener('DOMContentLoaded', function() {
+        var contactBtn = document.getElementById('contactMeBtn');
+        var contactModal = document.getElementById('contactMeModal');
+        var closeContactModal = document.getElementById('closeContactMeModal');
+        if (contactBtn && contactModal && closeContactModal) {
+            contactBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                contactModal.style.display = 'flex';
+                setTimeout(function() {
+                    contactModal.classList.add('active');
+                }, 10);
+            });
+            closeContactModal.addEventListener('click', function() {
+                contactModal.classList.remove('active');
+                setTimeout(function() {
+                    contactModal.style.display = 'none';
+                }, 200);
+            });
+            contactModal.addEventListener('click', function(e) {
+                if (e.target === contactModal) {
+                    contactModal.classList.remove('active');
+                    setTimeout(function() {
+                        contactModal.style.display = 'none';
+                    }, 200);
+                }
+            });
+        }
+    });
+    </script>
 </body>
 </html>
