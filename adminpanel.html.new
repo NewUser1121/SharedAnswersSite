@@ -3,110 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Panel - Slate</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="MainRecourses/MainPage.css">
+  <title>Admin Panel - Shared Answers</title>
   <link rel="stylesheet" href="MainRecourses/extraMainPage.css">
   <style>
-    .admin-login-container {
-      width: 100%;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    }
-    .admin-form-container {
-      background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-      width: 100%;
-      max-width: 400px;
-    }
-    .input-group {
-      margin-bottom: 1rem;
-    }
-    .input-group input {
-      width: 100%;
-      padding: 0.75rem;
-      border: 2px solid #e2e8f0;
-      border-radius: 8px;
-      font-size: 1rem;
-      transition: all 0.3s ease;
-    }
-    .input-group input:focus {
-      border-color: #6366f1;
-      outline: none;
-    }
-    .admin-message {
-      margin-top: 1rem;
-      padding: 0.75rem;
-      border-radius: 6px;
-      text-align: center;
-    }
-    .error {
-      background: #fee2e2;
-      color: #ef4444;
-    }
-    .success {
-      background: #dcfce7;
-      color: #22c55e;
-    }
+    /* ...existing styles... */
   </style>
 </head>
 <body>
   <div class="admin-login-container" id="adminLogin">
-    <div class="admin-form-container">
-      <h2>Admin Login</h2>
-      <form id="adminLoginForm">
-        <div class="input-group">
-          <input type="text" id="adminUsername" placeholder="Username" required autocomplete="username">
-        </div>
-        <div class="input-group">
-          <input type="password" id="adminPassword" placeholder="Password" required autocomplete="current-password">
-        </div>
-        <button type="submit" class="primary-btn">
-          <i class="fas fa-sign-in-alt"></i> Login
-        </button>
-        <div id="adminLoginMessage" class="admin-message"></div>
-      </form>
-    </div>
+    <h2>Admin Login</h2>
+    <form id="adminLoginForm">
+      <input type="text" id="adminUsername" placeholder="Username" required autocomplete="username">
+      <input type="password" id="adminPassword" placeholder="Password" required autocomplete="current-password">
+      <button type="submit">Login</button>
+      <div id="adminLoginMessage"></div>
+    </form>
   </div>
   <div class="admin-panel-container" id="adminPanel">
     <!-- ... existing panel content ... -->
   </div>
   
   <script src="MainRecourses/encryption.js"></script>
-  <script>    // Admin credentials (hardcoded for development)
-    const ADMIN_USERNAME = 'SicoKaleb';
-    const ADMIN_PASSWORD = 'Sico132456';
+  <script>
+    // Encrypted admin credentials
+    const ENCRYPTED_ADMIN_USERNAME = 'OS4yFG49CX3vKjz0bn2GJBhPHX4PtdN+G45o9NBwSHfx8b33yXR5tw==';
+    const ENCRYPTED_ADMIN_PASSWORD = 'nX5Bm2QwK9RvYpL1ht6MJCn5mP8Tqw2jN7Vx3DcFbHgE9SzA4Wy0vQ==';
+    const API_BASE = '/api';
+    let adminToken = null;
 
-    // Admin login handler
+    // Admin login with encryption
     const adminLoginForm = document.getElementById('adminLoginForm');
     const adminPanel = document.getElementById('adminPanel');
     const adminLogin = document.getElementById('adminLogin');
-    const adminLoginMessage = document.getElementById('adminLoginMessage');
     
-    adminLoginForm.onsubmit = function(e) {
+    adminLoginForm.onsubmit = async function(e) {
       e.preventDefault();
       const username = document.getElementById('adminUsername').value;
       const password = document.getElementById('adminPassword').value;
       
-      if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-        adminLoginMessage.textContent = 'Login successful';
-        adminLoginMessage.className = 'admin-message success';
+      try {
+        // Decrypt stored credentials and compare
+        const decryptedStoredUsername = await decrypt(ENCRYPTED_ADMIN_USERNAME);
+        const decryptedStoredPassword = await decrypt(ENCRYPTED_ADMIN_PASSWORD);
         
-        // Store admin session
-        sessionStorage.setItem('adminAuthenticated', 'true');
-        
-        setTimeout(() => {
+        if (username === decryptedStoredUsername && password === decryptedStoredPassword) {
           adminLogin.style.display = 'none';
           adminPanel.classList.add('active');
-        }, 500);
-      } else {
-        adminLoginMessage.textContent = 'Invalid username or password';
-        adminLoginMessage.className = 'admin-message error';
+        } else {
+          document.getElementById('adminLoginMessage').textContent = 'Invalid credentials.';
+        }
+      } catch (error) {
+        console.error('Authentication error:', error);
+        document.getElementById('adminLoginMessage').textContent = 'Authentication error occurred.';
       }
     };
 
